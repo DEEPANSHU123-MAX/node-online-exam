@@ -29,6 +29,28 @@
           />
         </div>
         <div class="form-group">
+          <label for="address">Address</label>
+          <input
+            type="address"
+            id="address"
+            name="address"
+            class="form-control"
+            placeholder="Enter address"
+            value="<%= typeof address != 'undefined' ? address : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="phone_no">phone number</label>
+          <input
+            type="number"
+            id="phone_no"
+            name="phone_no"
+            class="form-control"
+            placeholder="Enter Phone number"
+            value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>"
+          />
+        </div>
+        <div class="form-group">
           <label for="password">Password</label>
           <input
             type="password"

@@ -13,10 +13,21 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+    required: true,
+    default:" "
+  },
+  phone_no: {
+    type: Number,
+    required: true,
+    default:" "
+  },
   date: {
     type: Date,
     default: Date.now,
   },
+  type: { type: String, required: true, default: "student" },
 });
 
 const User = mongoose.model("User", UserSchema);

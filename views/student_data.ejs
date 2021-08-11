@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Sr.no</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Registration date</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(function (user , index){ %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%=  user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.address %></td>
+                    <td><%= user.date.toDateString()  %></td>
+                   
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <!-- <% users.forEach(function (user) { %>
+        <li>  
+            <p><%= user.name %>  <%= user.email %>  <%= user.address %> </p> 
+        </li>                                   
+    <% }) %> -->
+  </body>
+</html>

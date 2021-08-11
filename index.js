@@ -9,19 +9,23 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const user = require("./models/user");
+const jwt = require("jsonwebtoken");
 
 const db = require("./config/keys").mongoURI;
+app.use(express.json());
 
 //mongoose
 mongoose
   .connect(db, {
+
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then(() => console.log("Mongodb connected.."))
+  .then(() => console.log("Mongodb connected"))
   .catch((err) => console.log(err));
+
 
 //body parser
 app.use(express.urlencoded({ extended: false }));
@@ -61,8 +65,6 @@ const PORT = process.env.port || 5000;
 //ejs
 app.use(expresslayouts);
 app.set("view engine", "ejs");
-
-app.use(express.json());
 
 //routes
 
