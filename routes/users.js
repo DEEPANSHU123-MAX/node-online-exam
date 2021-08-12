@@ -2,7 +2,8 @@ const express = require("express");
 
 const dotenv = require("dotenv").config();
 
-console.log(dotenv.parsed);
+
+// console.log(dotenv.parsed);
 
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const router = new express.Router();
@@ -41,9 +42,10 @@ router.get("/register", (req, res) => res.render("register"));
 
 router.get("/student_profile", ensureAuthenticated, (req, res) => {
   
-  if (!req.query.search) {
+  if (!req.query) {
      User.find({ type: "student" }, (err, user) => {
       res.render("student_data", { users: user });
+      
     });
   } else {
     // console.log(req.query)
@@ -53,6 +55,7 @@ router.get("/student_profile", ensureAuthenticated, (req, res) => {
         res.render("student_data", { users: user });
       }
     );
+    
   }
 });
 
@@ -163,8 +166,8 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
-router.post("/register", async (req, res) => {
-  try {
+router.post("/register",  (req, res) => {
+  
     const { name, email, address, phone_no, password, password2 } = req.body;
     let errors = [];
 
@@ -232,9 +235,7 @@ router.post("/register", async (req, res) => {
         }
       });
     }
-  } catch (err) {
-    console.log(err);
-  }
+  
 });
 // Login
 router.post("/login", async (req, res, next) => {

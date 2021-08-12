@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+
+  <h1>View all registered student</h1> 
+  <button class=''>
+    <a href="/users/logout">logout</a>
+      </button>
+
   
   <body> <form action="/users/student_profile" method="GET">
     <input
@@ -15,7 +21,7 @@
       placeholder="Search for student"
       class="search"
     />
-    <button class="search-btn" type="submit">Submit</button>
+    <button class="search-btn" type="submit">Search</button>
 <div class="imae"></div>
 </form>
     <table class="table">
@@ -43,6 +49,7 @@
             <% }) %>
         </tbody>
     </table>
+    
     <!-- <% users.forEach(function (user) { %>
         <li>  
             <p><%= user.name %>  <%= user.email %>  <%= user.address %> </p> 
