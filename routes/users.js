@@ -1,19 +1,17 @@
 const express = require("express");
 
- const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 
- console.log(dotenv.parsed)
+console.log(dotenv.parsed);
 
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const router = new express.Router();
 
 const sg_mail = require("@sendgrid/mail");
 
-const Api_key =process.env.SENDGRID_API;
+const Api_key = process.env.SENDGRID_API;
 
 const jwt = require("jsonwebtoken");
-
-
 
 const jwt_secret = "some super secret";
 
@@ -37,25 +35,23 @@ router.get("/register", (req, res) => res.render("register"));
 //     const user = User.find({ name: regex, type:"student" }).then((res)=>{
 //       res.render("student_data" ,{user})
 //     });
-    
+
 //   }
 // });
 
-router.get("/student_profile", ensureAuthenticated, (req, res  ) => {
-  
-  if(!req.query.search){
-    
+router.get("/student_profile", ensureAuthenticated, (req, res) => {
+  // if (!req.query.search) {
     const user = User.find({ type: "student" }, (err, user) => {
-      res.render("student_data", { users : user});
-      
+      res.render("student_data", { users: user });
     });
-  }else{
-    var regex = new RegExp(req.query.search, "i");
-    const user = User.find({ name: regex, type:"student" }).then((response)=>{
-      res.render("student_data" ,{users: user})
-    });
-  }
-  
+  // } else {
+  //   var regex = new RegExp(req.query.search, "i");
+  //   const user = User.find({ name: regex, type: "student" }).then(
+  //     (response) => {
+  //       res.render("student_data", { users: user });
+  //     }
+  //   );
+  // }
 });
 
 router.get("/admin_dash", ensureAuthenticated, (req, res) =>
@@ -245,7 +241,7 @@ router.post("/login", async (req, res, next) => {
   // console.log(email, "==");
   try {
     const user = await User.findOne({ email });
-    if(!user){
+    if (!user) {
       req.flash("error_msg", "User is not register");
       res.redirect("login");
     }
