@@ -43,18 +43,18 @@ router.get("/register", (req, res) => res.render("register"));
 
 router.get("/student_profile", ensureAuthenticated, (req, res  ) => {
   
-  // if(!req.query){
+  if(!req.query.search){
     
     const user = User.find({ type: "student" }, (err, user) => {
       res.render("student_data", { users : user});
       
     });
-  // }else{
-  //   var regex = new RegExp(req.query.search, "i");
-  //   const user = User.find({ name: regex, type:"student" }).then((response)=>{
-  //     res.render("student_data" ,{users: user})
-  //   });
-  // }
+  }else{
+    var regex = new RegExp(req.query.search, "i");
+    const user = User.find({ name: regex, type:"student" }).then((response)=>{
+      res.render("student_data" ,{users: user})
+    });
+  }
   
 });
 
@@ -245,6 +245,10 @@ router.post("/login", async (req, res, next) => {
   // console.log(email, "==");
   try {
     const user = await User.findOne({ email });
+    if(!user){
+      req.flash("error_msg", "User is not register");
+      res.redirect("login");
+    }
     if (user.type === "admin") {
       redirect = "/users/admin_dash";
     }
