@@ -40,18 +40,20 @@ router.get("/register", (req, res) => res.render("register"));
 // });
 
 router.get("/student_profile", ensureAuthenticated, (req, res) => {
-  // if (!req.query.search) {
-    const user = User.find({ type: "student" }, (err, user) => {
+  
+  if (!req.query.search) {
+     User.find({ type: "student" }, (err, user) => {
       res.render("student_data", { users: user });
     });
-  // } else {
-  //   var regex = new RegExp(req.query.search, "i");
-  //   const user = User.find({ name: regex, type: "student" }).then(
-  //     (response) => {
-  //       res.render("student_data", { users: user });
-  //     }
-  //   );
-  // }
+  } else {
+    // console.log(req.query)
+    var regex = new RegExp(req.query.search, "i");
+    User.find({ name: regex, type: "student" }).then(
+      (user) => {
+        res.render("student_data", { users: user });
+      }
+    );
+  }
 });
 
 router.get("/admin_dash", ensureAuthenticated, (req, res) =>

@@ -10,6 +10,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const user = require("./models/user");
 const jwt = require("jsonwebtoken");
+const MongoStore = require("connect-mongo")( session);
 
 const db = require("./config/keys").mongoURI;
 app.use(express.json());
@@ -17,7 +18,6 @@ app.use(express.json());
 //mongoose
 mongoose
   .connect(db, {
-
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -26,19 +26,21 @@ mongoose
   .then(() => console.log("Mongodb connected"))
   .catch((err) => console.log(err));
 
-
 //body parser
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }))
 
 // Passport Config
 require("./config/passport")(passport);
 
-//express session
+//Oauth
 app.use(
   session({
-    secret: "secret",
+    secret: 'Ecomhguygu',
     resave: false,
-    saveUninitialized: true,
+    signed: true,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 308 * 60 * 100000 }
   })
 );
 
@@ -52,6 +54,7 @@ app.use(flash());
 //global vars
 // Global variables
 app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
