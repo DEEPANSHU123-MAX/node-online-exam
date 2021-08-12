@@ -1,16 +1,19 @@
 const express = require("express");
 
+ const dotenv = require('dotenv').config();
+
+ console.log(dotenv.parsed)
+
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const router = new express.Router();
 
 const sg_mail = require("@sendgrid/mail");
 
-const Api_key =
-  "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";
+const Api_key =process.env.SENDGRID_API;
 
 const jwt = require("jsonwebtoken");
 
-const nodemailer = require("nodemailer");
+
 
 const jwt_secret = "some super secret";
 
