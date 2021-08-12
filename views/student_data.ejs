@@ -6,7 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body>
+  <body> <action action="/users/student_profile" method="GET">
+    <input
+      type="text"
+      name="search"
+      id="search"
+      placeholder="Search for student"
+      class="search"
+    />
+    <button class="search-btn" type="submit">Submit</button>
+<div class="imae"></div>
+</action>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -19,6 +29,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- <% users.name %> -->
             <% users.forEach(function (user , index){ %>
                 <tr>
                     <td><%= index + 1 %></td>

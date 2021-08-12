@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken")
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -16,19 +17,28 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
-    default:" "
+    default: " ",
   },
   phone_no: {
     type: Number,
     required: true,
-    default:" "
+    default: " ",
   },
   date: {
     type: Date,
     default: Date.now,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   type: { type: String, required: true, default: "student" },
 });
+
 
 const User = mongoose.model("User", UserSchema);
 

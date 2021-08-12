@@ -1,15 +1,14 @@
 const express = require("express");
 
+const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const router = new express.Router();
 
 const sg_mail = require("@sendgrid/mail");
 
 const Api_key =
-  "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";
+  "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";
 
 const jwt = require("jsonwebtoken");
-
-const auth = require("../config/auth")
 
 const nodemailer = require("nodemailer");
 
@@ -28,17 +27,35 @@ router.get("/register", (req, res) => res.render("register"));
 
 //student profile
 
-router.get("/student_profile", (req, res) => {
-  const user = User.find({ type: "student" }, (err, user) => {
-   
+// router.post("/search", (req, res) => {
+//   // console.log(req.body.search);
+//   if (req.body.search) {
+//     var regex = new RegExp(req.body.search, "i");
+//     const user = User.find({ name: regex, type:"student" }).then((res)=>{
+//       res.render("student_data" ,{user})
+//     });
+    
+//   }
+// });
 
-    res.render("student_data", { users : user });
-   
-  });
+router.get("/student_profile", ensureAuthenticated, (req, res  ) => {
+  
+  // if(!req.query){
+    
+    const user = User.find({ type: "student" }, (err, user) => {
+      res.render("student_data", { users : user});
+      
+    });
+  // }else{
+  //   var regex = new RegExp(req.query.search, "i");
+  //   const user = User.find({ name: regex, type:"student" }).then((response)=>{
+  //     res.render("student_data" ,{users: user})
+  //   });
+  // }
   
 });
 
-router.get("/admin_dash", (req, res) =>
+router.get("/admin_dash", ensureAuthenticated, (req, res) =>
   res.render("admin_dash", { name: req.user.name })
 );
 
@@ -71,7 +88,7 @@ router.post("/forgot-password", (req, res, next) => {
 
     const message = {
       to: user.email,
-      from: "tyagideepanshu825@gmail.com",
+      from: "dktyagi047@gmail.com",
       subject: "reset your password by using",
       html: `http://localhost:5000/users/reset_password/${user.id}/${token}`,
     };
@@ -145,67 +162,77 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
-router.post("/register", (req, res) => {
-  const { name, email, address, phone_no, password, password2 } = req.body;
-  let errors = [];
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, address, phone_no, password, password2 } = req.body;
+    let errors = [];
 
-  if (!name || !email || !phone_no || !address || !password || !password2) {
-    errors.push({ msg: "Please enter all fields" });
-  }
+    if (!name || !email || !phone_no || !address || !password || !password2) {
+      errors.push({ msg: "Please enter all fields" });
+    }
 
-  if (password != password2) {
-    errors.push({ msg: "Passwords do not match" });
-  }
+    if (password != password2) {
+      errors.push({ msg: "Passwords do not match" });
+    }
 
-  if (password.length < 6) {
-    errors.push({ msg: "Password must be at least 6 characters" });
-  }
+    if (password.length < 6) {
+      errors.push({ msg: "Password must be at least 6 characters" });
+    }
 
-  if (errors.length > 0) {
-    res.render("register", {
-      errors,
-      name,
-      email,
-      password,
-      password2,
-    });
-  } else {
-    User.findOne({ email: email }).then((user) => {
-      if (user) {
-        errors.push({ msg: "Email already exists" });
-        res.render("register", {
-          errors,
-          name,
-          email,
-          password,
-          password2,
-        });
-      } else {
-        const newUser = new User({
-          name,
-          email,
-          address,
-          phone_no,
-          password,
-        });
+    if (errors.length > 0) {
+      res.render("register", {
+        errors,
+        name,
+        email,
+        password,
+        password2,
+      });
+    } else {
+      User.findOne({ email: email }).then((user) => {
+        if (user) {
+          errors.push({ msg: "Email already exists" });
+          res.render("register", {
+            errors,
+            name,
+            email,
+            password,
+            password2,
+          });
+        } else {
+          const newUser = new User({
+            name,
+            email,
+            address,
+            phone_no,
+            password,
+          });
+          const token = jwt.sign(
+            { _id: newUser._id.toString() },
+            "deepanshu tyagi"
+          );
+          newUser.tokens = newUser.tokens.concat({ token });
+          newUser.save();
 
-        //hashing a
+          //hashing a
 
-        bcrypt.hash(newUser.password, 10, function (err, hash) {
-          if (err) throw err;
-          //hashed a password
-          newUser.password = hash;
-          //save user
-          newUser
-            .save()
-            .then(() => {
-              req.flash("success_msg", "you are now register and can log in");
-              res.redirect("login");
-            })
-            .catch((err) => console.log(err));
-        });
-      }
-    });
+          bcrypt.hash(newUser.password, 10, function (err, hash) {
+            if (err) throw err;
+            //hashed a password
+            newUser.password = hash;
+            //save user
+            newUser
+              .save()
+              .then(() => {
+                req.flash("success_msg", "you are now register and can log in");
+                res.redirect("login");
+              })
+              .catch((err) => console.log(err));
+          });
+        }
+      });
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 // Login
@@ -213,17 +240,19 @@ router.post("/login", async (req, res, next) => {
   let redirect = "/dashboard";
   const { email } = req.body;
   // console.log(email, "==");
-  const user = await User.findOne({ email });
-  if (user.type === "admin") {
-    redirect = "/users/admin_dash";
-    
+  try {
+    const user = await User.findOne({ email });
+    if (user.type === "admin") {
+      redirect = "/users/admin_dash";
+    }
+    passport.authenticate("local", {
+      successRedirect: redirect,
+      failureRedirect: "/users/login",
+      failureFlash: true,
+    })(req, res, next);
+  } catch (err) {
+    console.log(err);
   }
-
-  passport.authenticate("local", {
-    successRedirect: redirect,
-    failureRedirect: "/users/login",
-    failureFlash: true,
-  })(req, res, next);
 });
 
 // Logout
