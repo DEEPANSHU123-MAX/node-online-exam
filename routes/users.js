@@ -3,6 +3,11 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 
 
+var mongo = require('mongodb').MongoClient;
+var objectId = require('mongodb').ObjectID;
+var assert = require('assert');
+
+
 // console.log(dotenv.parsed);
 
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
@@ -268,3 +273,24 @@ router.get("/logout", (req, res) => {
   res.redirect("/users/login");
 });
 module.exports = router;
+
+
+
+
+router.get('/delete_student/:id', function(req, res, next) {
+   const id =req.params;
+   User.findByIdAndDelete(req.params.id, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+        console.log("Deleted ");
+       
+    }
+   
+});
+res.redirect("/student_profile")
+
+
+});
+

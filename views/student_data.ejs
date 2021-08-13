@@ -24,6 +24,7 @@
     <button class="search-btn" type="submit">Search</button>
 <div class="imae"></div>
 </form>
+
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -44,9 +45,13 @@
                     <td><%= user.email %></td>
                     <td><%= user.address %></td>
                     <td><%= user.date.toDateString()  %></td>
+                    <td> <a class="btn btn-raised btn-danger" href="/users/delete_student/<%= user.id %>">Delete</a></td> </td>
+               
                    
                 </tr>
             <% }) %>
+
+           
         </tbody>
     </table>
     
@@ -55,5 +60,6 @@
             <p><%= user.name %>  <%= user.email %>  <%= user.address %> </p> 
         </li>                                   
     <% }) %> -->
+  
   </body>
 </html>
