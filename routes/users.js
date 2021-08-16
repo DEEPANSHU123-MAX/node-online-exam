@@ -2,15 +2,14 @@ const express = require("express");
 
 const dotenv = require("dotenv").config();
 
-
-var mongo = require('mongodb').MongoClient;
-var objectId = require('mongodb').ObjectID;
-var assert = require('assert');
-
-
 // console.log(dotenv.parsed);
 
-const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
+const {
+  ensureAuthenticated,
+  forwardAuthenticated,
+  isAdmin,
+  isLoggedIn,
+} = require("../config/auth");
 const router = new express.Router();
 
 const sg_mail = require("@sendgrid/mail");
@@ -32,39 +31,25 @@ router.get("/login", (req, res) => res.render("login"));
 
 router.get("/register", (req, res) => res.render("register"));
 
-//student profile
-
-// router.post("/search", (req, res) => {
-//   // console.log(req.body.search);
-//   if (req.body.search) {
-//     var regex = new RegExp(req.body.search, "i");
-//     const user = User.find({ name: regex, type:"student" }).then((res)=>{
-//       res.render("student_data" ,{user})
-//     });
-
-//   }
-// });
+router.get("/Exam", ensureAuthenticated, (req, res) =>
+  res.render("Exam", { name: req.user.name })
+);
 
 router.get("/student_profile", ensureAuthenticated, (req, res) => {
-  
   if (!req.query) {
-     User.find({ type: "student" }, (err, user) => {
+    User.find({ type: "student" }, (err, user) => {
       res.render("student_data", { users: user });
-      
     });
   } else {
     // console.log(req.query)
     var regex = new RegExp(req.query.search, "i");
-    User.find({ name: regex, type: "student" }).then(
-      (user) => {
-        res.render("student_data", { users: user });
-      }
-    );
-    
+    User.find({ name: regex, type: "student" }).then((user) => {
+      res.render("student_data", { users: user });
+    });
   }
 });
 
-router.get("/admin_dash", ensureAuthenticated, (req, res) =>
+router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
   res.render("admin_dash", { name: req.user.name })
 );
 
@@ -171,76 +156,74 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
-router.post("/register",  (req, res) => {
-  
-    const { name, email, address, phone_no, password, password2 } = req.body;
-    let errors = [];
+router.post("/register", (req, res) => {
+  const { name, email, address, phone_no, password, password2 } = req.body;
+  let errors = [];
 
-    if (!name || !email || !phone_no || !address || !password || !password2) {
-      errors.push({ msg: "Please enter all fields" });
-    }
+  if (!name || !email || !phone_no || !address || !password || !password2) {
+    errors.push({ msg: "Please enter all fields" });
+  }
 
-    if (password != password2) {
-      errors.push({ msg: "Passwords do not match" });
-    }
+  if (password != password2) {
+    errors.push({ msg: "Passwords do not match" });
+  }
 
-    if (password.length < 6) {
-      errors.push({ msg: "Password must be at least 6 characters" });
-    }
+  if (password.length < 6) {
+    errors.push({ msg: "Password must be at least 6 characters" });
+  }
 
-    if (errors.length > 0) {
-      res.render("register", {
-        errors,
-        name,
-        email,
-        password,
-        password2,
-      });
-    } else {
-      User.findOne({ email: email }).then((user) => {
-        if (user) {
-          errors.push({ msg: "Email already exists" });
-          res.render("register", {
-            errors,
-            name,
-            email,
-            password,
-            password2,
-          });
-        } else {
-          const newUser = new User({
-            name,
-            email,
-            address,
-            phone_no,
-            password,
-          });
-          const token = jwt.sign(
-            { _id: newUser._id.toString() },
-            "deepanshu tyagi"
-          );
-          newUser.tokens = newUser.tokens.concat({ token });
-          newUser.save();
+  if (errors.length > 0) {
+    res.render("register", {
+      errors,
+      name,
+      email,
+      password,
+      password2,
+    });
+  } else {
+    User.findOne({ email: email }).then((user) => {
+      if (user) {
+        errors.push({ msg: "Email already exists" });
+        res.render("register", {
+          errors,
+          name,
+          email,
+          password,
+          password2,
+        });
+      } else {
+        const newUser = new User({
+          name,
+          email,
+          address,
+          phone_no,
+          password,
+        });
+        const token = jwt.sign(
+          { _id: newUser._id.toString() },
+          "deepanshu tyagi"
+        );
+        newUser.tokens = newUser.tokens.concat({ token });
+        newUser.save();
 
-          //hashing a
+        //hashing a
 
-          bcrypt.hash(newUser.password, 10, function (err, hash) {
-            if (err) throw err;
-            //hashed a password
-            newUser.password = hash;
-            //save user
-            newUser
-              .save()
-              .then(() => {
-                req.flash("success_msg", "you are now register and can log in");
-                res.redirect("login");
-              })
-              .catch((err) => console.log(err));
-          });
-        }
-      });
-    }
-  
+        bcrypt.hash(newUser.password, 10, function (err, hash) {
+          if (err) throw err;
+          //hashed a password
+          newUser.password = hash;
+          //save user
+          newUser
+            .save()
+            .then(() => {
+              req.flash("success_msg", "you are now register and can log in");
+              res.redirect("login");
+            })
+            .catch((err) => console.log(err));
+        });
+      }
+    });
+  }
 });
 // Login
 router.post("/login", async (req, res, next) => {
@@ -272,25 +255,16 @@ router.get("/logout", (req, res) => {
   req.flash("success_msg", "You are logged out");
   res.redirect("/users/login");
 });
+
+//student data delete
+router.get("/delete_student/:id", function (req, res, next) {
+  User.findByIdAndDelete(req.params.id, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Deleted ");
+    }
+  });
+  res.redirect("/users/student_profile");
+});
 module.exports = router;
-
-
-
-
-router.get('/delete_student/:id', function(req, res, next) {
-   const id =req.params;
-   User.findByIdAndDelete(req.params.id, function (err, docs) {
-    if (err){
-        console.log(err)
-    }
-    else{
-        console.log("Deleted ");
-       
-    }
-   
-});
-res.redirect("/student_profile")
-
-
-});
-

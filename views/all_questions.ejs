@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <form action="/all_Questions_data" method="GET">
+        <select name="search">
+            <% var options = []; %>
+            <% exam_name.forEach(function (exam , index){%>
+              <option value='<%= exam.name %>'><%= exam.name %></option>
+            <% } )%>
+          </select>
+        <button class="search-btn" type="submit">Search</button>
+    <div class="imae"></div>
+    </form>
+    <h1>View all Questions</h1>
+    <table  style="border:1px solid black;" class="table">
+      
+        
+        <thead class="thead-dark">
+            <tr>
+                <th>Questions</th>
+                
+               
+            </tr>
+        </thead>
+        
+    </table>
+</body>
+</html>

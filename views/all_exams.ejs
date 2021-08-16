@@ -1,0 +1,37 @@
+
+
+
+<h1>View all Exams</h1>
+<a href='/exam/create'>Create Exam</a>
+<table  style="border:1px solid black;" class="table">
+      
+        
+    <thead class="thead-dark">
+        <tr>
+            <th>Sr.no</th>
+            <th>Date</th>
+            <th>ExamName</th>
+            <th>Active</th>
+            <th>Actions</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+
+        <% exams.forEach(function (exam , index){ %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%=  exam.date.toDateString() %></td>
+                <td><%= exam.name %></td>
+                <td><%= exam.isActive %></td>
+                <td><a href='exam/edit/<%= exam.id%>'>Edit</a><a class="btn btn-raised btn-danger" href="/exam/delete/<%= exam.id %>">Delete</a></td>
+            </td>
+           
+               
+            </tr>
+        <% }) %>
+
+       
+    </tbody>
+</table>
+</body>

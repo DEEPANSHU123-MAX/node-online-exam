@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const indexroute = require("./routes/index");
 const userroute = require("./routes/users");
+const examroutes = require("./routes/exam");
 const expresslayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
@@ -9,8 +10,9 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const user = require("./models/user");
+const exam = require("./models/exam");
 const jwt = require("jsonwebtoken");
-const MongoStore = require("connect-mongo")( session);
+const MongoStore = require("connect-mongo")(session);
 
 const db = require("./config/keys").mongoURI;
 app.use(express.json());
@@ -22,13 +24,12 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    
   })
   .then(() => console.log("Mongodb connected"))
   .catch((err) => console.log(err));
 
 //body parser
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }));
 
 // Passport Config
 require("./config/passport")(passport);
@@ -36,12 +37,12 @@ require("./config/passport")(passport);
 //Oauth
 app.use(
   session({
-    secret: 'Ecomhguygu',
+    secret: "Ecomhguygu",
     resave: false,
     signed: true,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie: { maxAge: 308 * 60 * 100000 }
+    cookie: { maxAge: 308 * 60 * 100000 },
   })
 );
 
@@ -73,6 +74,7 @@ app.set("view engine", "ejs");
 //routes
 
 app.use(indexroute);
+app.use("/", examroutes);
 app.use("/users", userroute);
 
 app.listen(PORT, () => console.log(`Server is set up on ${PORT}`));
