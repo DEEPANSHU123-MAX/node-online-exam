@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Create question</h1>
+    <form action="/add_question/<%= exam_id %>" method="POST">
+        <h3>#questions</h3>
+        <textarea id="questionName" name="questionName" rows="4" cols="50"></textarea>
+        <h3>select option</h3>
+        <label for="option1">option1</label>
+        <input type="text" id="option1" name="option1" ><br>
+        <label for="option2">option2</label> 
+        <input type="text" id="option2" name="option2" ><br>
+        <label for="option3">option3</label>
+        <input type="text" id="option3" name="option3" ><br>
+        <label for="option4">option4</label>
+        <input type="text" id="option4" name="option4" ><br>
+        
+        <h4>correct option</h4> <select name="correctOption" id="cars">
+            <option value="option1">option1</option>
+            <option value="option2">option2</option>
+            <option value="option3">option3</option>
+            <option value="option4">option4</option>
+            
+          </select>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

@@ -11,7 +11,7 @@ const ExamSchema = new mongoose.Schema({
       option2: String,
       option3: String,
       option4: String,
-      correctOption: Number,
+      correctOption: String,
     },
   ],
 });

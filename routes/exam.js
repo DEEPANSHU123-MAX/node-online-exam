@@ -11,6 +11,7 @@ const router = new express.Router();
 
 const Exam = require("../models/exam");
 
+
 //---------------------------------------exam------------------------------------------
 // exam create - name,date
 // route - /exam POST
@@ -100,7 +101,10 @@ router.get("/all_Questions_data", async (req, res) => {
   
  
   const exam_dropdown = await Exam.find({})
-  
+  if(!req.query.search){
+    res.render("all_question_data",{exam_name:exam_dropdown , questions:[] , exam_id:null });
+  }
+  else{
     const exam = await Exam.find({name : req.query.search})
     
     exam.forEach((x)=>{
@@ -111,15 +115,14 @@ router.get("/all_Questions_data", async (req, res) => {
        res.render("all_question_data",{questions :name, exam_name:exam_dropdown , exam_id:x.id})
       }else{
         console.log("no question available")
+        res.redirect('/all_question_data' );
         
       }
-      
-    })
+  })
+   
+       }
     
       
-    
-    
-  
 });
 
 router.get("/all_Questions_table", async (req, res) => {
@@ -158,6 +161,27 @@ router.get("/question/delete/:id/:exam_id", async (req, res) => {
   const data =await Exam.updateOne({_id:exam_id} , { $pull: {questions:{ _id:id} }});
   res.redirect('back');
 });
+
+
+router.get("/create_question/:id", async (req, res) => {
+   res.render("create_question",{exam_id: req.params.id})
+});
+
+//add question
+router.post("/add_question/:id", async (req, res) => {
+  console.log(req.params.id)
+  console.log(req.body)
+  const exam = await Exam.findById({_id :req.params.id})
+  const key=req.body.correctOption;
+  const data={...req.body,...{correctOption:req.body[key]}}
+  exam.questions.push(data)
+ 
+  await exam.save()
+  req.flash("success_msg", "You are back");
+  res.redirect('back');
+  
+});
+
 
 //---------------------------------------question------------------------------------------
 
