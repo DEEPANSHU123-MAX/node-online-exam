@@ -1,64 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
-    <form action="/all_Questions_data" method="GET">
-        <select name="search"  onclick="updateid(this.id)">
-            <% var options = []; %>
-            <% exam_name.forEach(function (exam , index){%>
-                
-              <option  id="exam_name.id" value='<%= exam.name %>'><%= exam.name %></option>
-           
-            <% } )%>
-          </select>
-
-        <button class="search-btn" type="submit">Search</button>
-       
-    <div class="imae"></div>
-    </form>
-   
-    <a  id="myAnchor" href="/create_question/<%= exam_id %>">add new question</a>
-   
-   
+  <head>
     
-    
-    <h1>View all Questions</h1>
-    <table  style="border:1px solid black;" class="table">
       
-        
-        <thead class="thead-dark">
-            <tr>
-                <th>Sr.no</th>
-                <th>Questions</th>
-                <th>options</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-                <% questions.forEach(function (question , index){ %>
-                    <tr>
-                        <td><%= index + 1 %></td>
-                        <td><%=question.questionName %></td>
-                        <td><a href='/question/update/<%= question.id%>/<%=exam_id %>'>Edit</a></td>
-                       <td><a class="btn btn-raised btn-danger" href="/question/delete/<%= question.id %>/<%= exam_id %>">Delete</a></td>
-                       
-                   
-                       
-                    </tr> 
-                <% }) %>
-           
-          
+      
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  
+  <body>
+    
+    <form action="/all_Questions_data" method="GET">
+      <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
+        <option  value="">Select exam</option>
+        <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
+            
 
+        <option id="<%=exam.id%>" value="<%= exam.name %>">
+          <%= exam.name %>
+        </option>
 
+        <% } )%>
+      </select>
 
-        </tbody> -->
+      <button class="search-btn" type="submit">Search</button>
+
+      <div class="imae"></div>
+    </form>
+
+    <a id="myAnchor" href="/create_question/<%= exam_name[0].id %>"
+      >add new question</a
+    >
+
+    <h1>View all Questions</h1>
+    <table style="border: 1px solid black" class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Sr.no</th>
+          <th>Questions</th>
+          <th>options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% questions.forEach(function (question , index){ %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%=question.questionName %></td>
+          <td>
+            <a href="/question/update/<%= question.id%>/<%=exam_id %>">Edit</a>
+          </td>
+          <td>
+            <a
+              class="btn btn-raised btn-danger"
+              href="/question/delete/<%= question.id %>/<%= exam_id %>"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+      -->
     </table>
     
-</body>
+    <script type="">
+    
+
+        function updateid()
+          {
+
+      var selectedVal = document.getElementById("mySelect").value;
+
+      var parsed_data = <%- JSON.stringify(exam_name) %>;
+      parsed_data=[...parsed_data];
+      const selectedData = parsed_data.find(data=>data.name===selectedVal);
+      console.log(selectedData._id);
+          document.getElementById('myAnchor').href =`/create_question/${selectedData._id}`
+
+         }
+    </script>
+  </body>
+  <%- include ("./partials/messages") %>
 </html>

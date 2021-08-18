@@ -16,6 +16,13 @@ const ExamSchema = new mongoose.Schema({
   ],
 });
 
+
+// ExamSchema.path('name').validate(async (value) => {
+//   const nameCount = await mongoose.models.Exam.countDocuments({name: value });
+//   return !nameCount;
+//   next()
+// }, 'Exam name already exists');
+
 const Exam = mongoose.model("Exam", ExamSchema);
 
 module.exports = Exam;

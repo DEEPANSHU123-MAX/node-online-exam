@@ -21,9 +21,21 @@ router.get("/exam/create", (req, res) => {
 
 router.post("/exam", async (req, res) => {
   // console.log(req.body);
+  try{
+
+  
   const exam = new Exam(req.body);
-  exam.save();
+   exam.save();
   res.redirect("/exam");
+}catch(err){
+  req.flash("error_msg", "unique exam ");
+  res.redirect('/exam/create' );
+  
+}
+ 
+  
+ 
+  
 });
 
 // edit exam
@@ -105,7 +117,8 @@ router.get("/all_Questions_data", async (req, res) => {
     res.render("all_question_data",{exam_name:exam_dropdown , questions:[] , exam_id:null });
   }
   else{
-    const exam = await Exam.find({name : req.query.search})
+    const exam = await Exam.find({name : req.query.search  })
+    
     
     exam.forEach((x)=>{
       
@@ -114,8 +127,9 @@ router.get("/all_Questions_data", async (req, res) => {
       
        res.render("all_question_data",{questions :name, exam_name:exam_dropdown , exam_id:x.id})
       }else{
-        console.log("no question available")
-        res.redirect('/all_question_data' );
+        // console.log("no question available")
+        req.flash("error_msg", "No question available");
+        res.redirect('/all_Questions_data' );
         
       }
   })
@@ -125,11 +139,15 @@ router.get("/all_Questions_data", async (req, res) => {
       
 });
 
-router.get("/all_Questions_table", async (req, res) => {
-  const exam = await Exam.find({})
- 
+router.get("/all_Questions_table/:id", async (req, res) => {
+  const id = req.params.id
+  const exam = await Exam.findById({_id: id})
+  const exam_dropdown = await Exam.find({})
   
-    res.render("all_questions",{exam_name:exam});
+  
+    
+  res.render("all_question_data",{questions :exam.questions, exam_name:exam_dropdown , exam_id:exam.id})
+      
 
   
 });
@@ -142,14 +160,36 @@ router.get("/question", async (req, res) => {
 // edit question
 // route - question/edit/:id patch
 
-router.get("/question/edit/:id", async (req, res) => {
-  const exam = await Exam.findByIdAnd;
+router.get("/question/update/:questionid/:examid", async (req, res) => {
+  const questionid = req.params.questionid
+  const exam = await Exam.findById({_id:req.params.examid})
+  exam.questions.forEach((x)=>{
+    if(x._id ==questionid){
+      const question_name = x.questionName
+      res.render("question_edit" ,{exam , question_name , questionid})
+    }
+    
+  })
 });
 
-router.patch("/question/:id", async (req, res) => {
-  const id = req.params.id;
-  const exam = await Exam.findByIdAndUpdate({ _id: id }, req.body);
+router.post("/question/update/:questionid/:examid", async (req, res) => {
+  const exam_id=req.params.examid
+  const question_id = req.params.questionid
+  const exam = await Exam.updateOne( 
+    { 
+      "questions._id":question_id
+    },
+    { 
+     "$set":{
+       "questions.$.questionName": req.body.name
+     }
+    },
+  
+)
+console
+res.redirect(`/all_Questions_table/${exam_id}`)
 });
+
 
 router.get("/question/delete/:id/:exam_id", async (req, res) => {
   const id = req.params.id;
@@ -169,17 +209,19 @@ router.get("/create_question/:id", async (req, res) => {
 
 //add question
 router.post("/add_question/:id", async (req, res) => {
-  console.log(req.params.id)
-  console.log(req.body)
+  if(!req.body.questionName || !req.body.option1 || !req.body.option2 || !req.body.option3 || !req.body.option4 ||!req.body.correctOption){
+    req.flash("error_msg", "All fields are mandatory"); 
+  }else{
+
   const exam = await Exam.findById({_id :req.params.id})
   const key=req.body.correctOption;
   const data={...req.body,...{correctOption:req.body[key]}}
   exam.questions.push(data)
- 
+  console.log(exam.name)
   await exam.save()
-  req.flash("success_msg", "You are back");
-  res.redirect('back');
   
+  }
+  res.redirect(`back`);
 });
 
 

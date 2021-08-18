@@ -2,6 +2,7 @@
 
 
 <h1>View all Exams</h1>
+
 <a href='/exam/create'>Create Exam</a>
 <table  style="border:1px solid black;" class="table">
       
@@ -23,7 +24,10 @@
                 <td><%= index + 1 %></td>
                 <td><%=  exam.date.toDateString() %></td>
                 <td><%= exam.name %></td>
-                <td><%= exam.isActive %></td>
+                <td><label class="switch">
+                    <input type="checkbox" id = <%=exam.id%>>
+                    <span class="slider round"></span>
+                  </label></td>
                 <td><a href='exam/edit/<%= exam.id%>'>Edit</a><a class="btn btn-raised btn-danger" href="/exam/delete/<%= exam.id %>">Delete</a></td>
             </td>
            
@@ -34,4 +38,6 @@
        
     </tbody>
 </table>
+
+
 </body>

@@ -204,7 +204,7 @@ router.post("/register", (req, res) => {
           "deepanshu tyagi"
         );
         newUser.tokens = newUser.tokens.concat({ token });
-        newUser.save();
+        
 
         //hashing a
 
@@ -222,6 +222,8 @@ router.post("/register", (req, res) => {
             .catch((err) => console.log(err));
         });
       }
+    }).catch((err)=>{
+      console.log(err)
     });
   }
 });
