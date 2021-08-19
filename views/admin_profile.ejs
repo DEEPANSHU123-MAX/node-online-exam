@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+    <style>
+      h1,h2 {text-align: center;}
+      form {text-align: center;}
+      
+h1,h2 {
+  background-color: #d5f4e6;
+}
+
+    </style>
+</head>
+<body>
+
+<h1>      My Profile       </h1>
+
+
+    <form >
+      <i class="fa fa-user fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="fname"> Name     :</label>
+        <input style="margin-left:52px"  type="text" id="fname" name="fname" maxlenght ="40"  size="40" value="<%=name%>" disabled >
+        <div style="display: inline;">
+          <button type="reset" value="Submit" onclick="toggle1()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div><br><br>
+          
+
+
+        <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="Email">Email    :</label>
+        <input style="margin-left:53px" type="text" id="Email" name="Email"  size="40" value="<%=email%>" disabled>
+        <div style="display: inline;">
+          <button type="reset" value="Submit" onclick="toggle2()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div><br><br>
+
+        <i class="fa fa-phone fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="phone_no">Phone No. :</label>
+        <input style="margin-left:20px" type="text" id="phone_no" name="phone_no"  size="40" value="<%=phone_no%>"disabled>
+        <div style="display: inline;">
+          <button type="reset" value="Submit" onclick="toggle3()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div><br><br>
+
+
+        <i class="fa fa-address-book fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="address">Address  :</label>
+        <input style="margin-left:30px" type="text" id="address" name="address"  size="40" value="<%=address%>" disabled>
+        <div style="display: inline;">
+          <button type="reset" value="Submit" onclick="toggle4()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div><br><br>
+
+       
+<script>
+ function toggle1() 
+{
+  document.getElementById("fname").disabled = !document.getElementById("fname").disabled;
+}
+function toggle2(){
+  document.getElementById("Email").disabled = !document.getElementById("Email").disabled;
+   }
+
+   function toggle3(){
+  document.getElementById("phone_no").disabled = !document.getElementById("phone_no").disabled;
+   }
+   function toggle4(){
+  document.getElementById("address").disabled = !document.getElementById("address").disabled;
+}
+</script>
+      
+    </form>
+    
+
+      <h2>Change Password</h2>
+      <form action= "/users/admin_profile" method = "POST" >
+        <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="oldpassword"> Old Password:</label>
+        <input type="text" id="oldpassword" name="oldpassword"  size="40" ><br><br>
+
+
+
+        <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="newpassword">New Password:</label>
+        <input type="password" id="newpassword" name="newpassword"  size="40"><br><br>
+
+
+        <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="confirmpassword">Confirm Password:</label>
+        <input type="password" id="confirmpassword" name="confirmpassword"  size="40" ><br><br>
+        <button type="submit" class="btn btn-primary" >Submit  </button> 
+       </form>
+
+        
+
+        
+</body>
+
+
+  
+
+</html>

@@ -53,6 +53,58 @@ router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
   res.render("admin_dash", { name: req.user.name })
 );
 
+// Admin  Profile
+router.get("/admin_profile",(req,res)=>{
+  res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address})
+});
+
+//admin password change
+  
+router.post("/admin_profile",(req , res)=>{
+
+  
+  
+
+  let session = req.session ;
+  console.log(req.body)
+
+  const user_email=session.req.user.email
+  
+
+  if (user_email){
+      var old_password = req.body.oldpassword ;
+      var new_password = req.body.newpassword ;
+       var confirm_password = req.body.confirmpassword ;
+    User.findOne({"email":user_email},(err,user)=>{
+      if(user!=null){
+          var hash =user.password;
+          bcrypt.compare(old_password,hash,(err,res)=>{
+
+            if(res){
+              if(new_password === confirm_password){
+                bcrypt.hash(new_password,3,(err,hash)=>{
+                  user.password=hash;
+                  user.save(function(err,user){
+                    if(err) return console.error(err)
+
+                    
+
+                    console.log(" your password has been changed");
+                  })
+                })
+              }
+            }
+          })
+      }
+    })
+  }
+  
+  req.flash("success_msg", "your password is now changed");
+  res.redirect("admin_dash")
+});
+
+
+
 // router.get("/dashboard", (req, res) => res.render("dashboard"));
 router.get("/forgot-password", (req, res, next) =>
   res.render("forgot-password")
@@ -257,7 +309,31 @@ router.get("/logout", (req, res) => {
   req.flash("success_msg", "You are logged out");
   res.redirect("/users/login");
 });
-
+//student detail edit
+router.patch('/std/:id',async(req,res)=>{
+  
+  await User.findByIdAndUpdate(req.params.id, req.body);
+  try
+  {
+      res.redirect("/dashboard")
+  }catch(e)
+  {
+  console.log("Something Went Problem");
+   }
+});
+//show data on student profile form
+router.get('/std/:id/edit',async(req,res)=>{
+  try{
+   
+      const user = await User.findById(req.params.id)
+      res.render('student_profile',{user})
+  }
+  catch(e){
+      console.log(e.message)
+          res.render() 
+  }
+  
+  });
 //student data delete
 router.get("/delete_student/:id", function (req, res, next) {
   User.findByIdAndDelete(req.params.id, function (err, docs) {

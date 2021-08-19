@@ -77,37 +77,42 @@ router.get("/exam/delete/:id", async (req, res) => {
   // await Exam.findByIdAndDelete({ _id: id });
 });
 
-router.get("/exam", async (req, res) => {
+router.get("/exam", ensureAuthenticated, isAdmin,async (req, res) => {
+  
   const exams = await Exam.find({}); // this will return an array of all exams
   res.render("all_exams", { exams });
+  
 });
+
+
+// router.get("/select_Exam_data", ensureAuthenticated, isAdmin,async (req, res) => {
+//   // const all_exams = await Exam.find({});
+//   const exams = await Exam.find({name:req.query.search}); // this will return an array of all exams
+//   res.render("all_exams", { exams ,all_exams});
+  
+// });
+
+
+router.get("/exam/:id/active", async (req, res) => {
+  const id = req.params.id
+  const exams = await Exam.findById({_id:id }); // this will return an array of all exams
+  exams.isActive=!exams.isActive
+  await exams.save()
+  res.json({status:"ok"})
+  
+});
+
+
+
 
 //---------------------------------------exam------------------------------------------
 
+
+
 //---------------------------------------question------------------------------------------
 
-// get all
-// route - question
-// var user_id = '6118d5a7f5452f6d54236080';
-//  Exam.findById(user_id ,(err , exam )=>{
-  
 
-//     exam.questions = exam.questions.concat({ questionName:"what is grammar" });
-//     exam.save();
-    
-//  }) 
-// console.log(exam)
-  //  exam.questions = exam.questions.concat({ questionName:"what is science" });
-    
 
-// router.get("/create_question", async (req, res) => {
-//   const question = await new Exam({
-//     questionName:"first question",
-    
-//   });
-//   question.save()
-//   // res.redirect("/question");
-// });
 
 router.get("/all_Questions_data", async (req, res) => {
   
@@ -152,7 +157,7 @@ router.get("/all_Questions_table/:id", async (req, res) => {
   
 });
 
-router.get("/question", async (req, res) => {
+router.get("/question", isAdmin, async (req, res) => {
   const exam = await Exam.find({});
   res.redirect("/question");
 });

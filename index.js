@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const indexroute = require("./routes/index");
 const userroute = require("./routes/users");
+const methodOverride = require('method-override')
 const examroutes = require("./routes/exam");
 const expresslayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
@@ -30,6 +31,7 @@ mongoose
 
 //body parser
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride('_method'));
 
 // Passport Config
 require("./config/passport")(passport);
