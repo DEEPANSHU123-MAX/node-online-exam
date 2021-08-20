@@ -169,12 +169,13 @@ router.get("/question", isAdmin, async (req, res) => {
 // route - question/edit/:id patch
 
 router.get("/question/update/:questionid/:examid", async (req, res) => {
+  const exams = await Exam.find({});
   const questionid = req.params.questionid;
   const exam = await Exam.findById({ _id: req.params.examid });
-  exam.questions.forEach((x) => {
-    if (x._id == questionid) {
-      const question_name = x.questionName;
-      res.render("question_edit", { exam, question_name, questionid });
+  exam.questions.forEach((ques) => {
+    if (ques._id == questionid) {
+      const question =ques
+      res.render("question_edit", { exam, question, questionid ,exams});
     }
   });
 });
@@ -182,13 +183,20 @@ router.get("/question/update/:questionid/:examid", async (req, res) => {
 router.post("/question/update/:questionid/:examid", async (req, res) => {
   const exam_id = req.params.examid;
   const question_id = req.params.questionid;
+  const{questionName ,option1 , option2 , option3 , option4 ,correctOption} = req.body
   const exam = await Exam.updateOne(
     {
       "questions._id": question_id,
     },
     {
       $set: {
-        "questions.$.questionName": req.body.name,
+        "questions.$.questionName":questionName ,
+        "questions.$.option1":option1 ,
+        "questions.$.option2":option2 ,
+        "questions.$.option3":option3 ,
+        "questions.$.option4":option4 ,
+        "questions.$.correctOption":correctOption ,
+
       },
     }
   );
@@ -209,8 +217,9 @@ router.get("/question/delete/:id/:exam_id", async (req, res) => {
   res.redirect("back");
 });
 
-router.get("/create_question/:id", async (req, res) => {
-  res.render("create_question", { exam_id: req.params.id });
+router.get("/create_question", async (req, res) => {
+  const exam_name = await Exam.find({});
+  res.render("create_question", { exam_name});
 });
 
 //add question

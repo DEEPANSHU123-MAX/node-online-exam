@@ -31,9 +31,8 @@
       <div class="imae"></div>
     </form>
 
-    <a id="myAnchor" href="/create_question/<%= exam_name.id || exam_id %>"
-      >add new question</a
-    >
+    <a id="" href="/create_question"
+      >Add new question</a >
 
     <h1> view All Questions</h1>
     <table style="border: 1px solid black" class="table">
@@ -54,7 +53,7 @@
           <td><%= index + 1 %></td>
           <td><%=question.questionName %></td>
           <td>
-            <a href="/question/update/<%= question.id%>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>">Edit</a>
+            <a class="btn btn-raised btn-success" href="/question/update/<%= question.id%>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>">Edit</a>
           </td>
           <td>
             <a
@@ -70,22 +69,7 @@
       -->
     </table>
     
-    <script type="">
-    
-
-        function updateid()
-          {
-
-      var selectedVal = document.getElementById("mySelect").value;
-
-      var parsed_data = <%- JSON.stringify(exam_name) %>;
-      parsed_data=[...parsed_data];
-      const selectedData = parsed_data.find(data=>data.name===selectedVal);
-      console.log(selectedData._id);
-          document.getElementById('myAnchor').href =`/create_question/${selectedData._id}`
-
-         }
-    </script>
+   
   </body>
   
 </html>

@@ -8,8 +8,24 @@
 </head>
 <%- include ("./partials/messages") %>
 <body>
+     
+    
+        <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
+          <option  value="">Select exam</option>
+          <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
+              
+  
+          <option id="<%=exam.id%>" value="<%= exam.name %>" >
+            <%= exam.name %>
+          </option>
+  
+          <% } )%>
+        </select>
+  
+        <div class="imae"></div>
+     
     <h1>Create question</h1>
-    <form action="/add_question/<%= exam_id %>" method="POST">
+    <form action="/add_question" id ="form_id" method="POST">
         <h3>#questions</h3>
         <textarea id="questionName" name="questionName" rows="4" cols="50"></textarea>
         <h3>select option</h3>
@@ -32,13 +48,26 @@
         <input type="submit" class="btn btn-success"  value="Submit">
     
     </form>
-    <a class="btn btn-info" href="/all_Questions_table/<%= exam_id %>"
+    <a class="btn btn-info" id="cancel" href="/all_Questions_data"
             >cancel</a
           >
-    <!-- <script>
-        function multipleFunc() {
-           document.getElementById("correctOption").multiple = true;
-        }
-     </script> -->
+          <script type="">
+    
+
+            function updateid()
+              {
+    
+          var selectedVal = document.getElementById("mySelect").value;
+    
+          var parsed_data = <%- JSON.stringify(exam_name) %>;
+          parsed_data=[...parsed_data];
+          const selectedData = parsed_data.find(data=>data.name===selectedVal);
+          console.log(selectedData._id);
+          document.getElementById("form_id").action  =`/add_question/${selectedData._id}`
+         
+    
+             }
+        </script>
 </body>
+
 </html>
