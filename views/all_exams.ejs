@@ -6,7 +6,12 @@
 
 
 <a href='/exam/create'>Create Exam</a>
-<table  style="border:1px solid black;" class="table">
+
+<div>
+    <input type="text" name="" id="input" onkeyup="searchfun()" placeholder="search name" >
+  </div>
+
+<table id="mytable"  style="border:1px solid black;" class="table">
       
         
     <thead class="thead-dark">
@@ -49,6 +54,27 @@
     </tbody>
 </table>
 <script>
+   
+     const searchfun =()=>{
+       let filter = document.getElementById("input").value.toUpperCase()
+
+       let myTable = document.getElementById("mytable")
+       let tr =myTable.getElementsByTagName("tr")
+
+       for(var i =0 ; i<tr.length;i++){
+         let td = tr[i].getElementsByTagName("td")[2]
+         if(td){
+           let textvalue = td.textContent||td.innerHTML
+
+           if(textvalue.toUpperCase().indexOf(filter) > -1){
+             tr[i].style.display =""
+           }else{
+             tr[i].style.display = "none"
+           }
+         }
+       }
+     }
+
 
     function isactive(e){
        fetch(`/exam/${e}/active`)

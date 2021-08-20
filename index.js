@@ -8,6 +8,7 @@ const expresslayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
+
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const user = require("./models/user");
@@ -35,6 +36,8 @@ app.use(methodOverride('_method'));
 
 // Passport Config
 require("./config/passport")(passport);
+
+
 
 //Oauth
 app.use(

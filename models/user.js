@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const validator=require("mongoose-validator")
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -9,20 +10,28 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    validate: [
+      validator({
+        validator: 'isEmail',
+        message: 'Oops..please enter valid email'
+      })
+    ],
   },
   password: {
     type: String,
     required: true,
+    trim:true
   },
   address: {
     type: String,
     required: true,
-    default: " ",
+    
   },
   phone_no: {
     type: Number,
     required: true,
-    default: " ",
+    
+    
   },
   date: {
     type: Date,

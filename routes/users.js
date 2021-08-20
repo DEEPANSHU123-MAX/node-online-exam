@@ -36,17 +36,11 @@ router.get("/Exam", ensureAuthenticated, (req, res) =>
 );
 
 router.get("/student_profile", ensureAuthenticated, (req, res) => {
-  if (!req.query) {
+ 
     User.find({ type: "student" }, (err, user) => {
       res.render("student_data", { users: user });
     });
-  } else {
-    // console.log(req.query)
-    var regex = new RegExp(req.query.search, "i");
-    User.find({ name: regex, type: "student" }).then((user) => {
-      res.render("student_data", { users: user });
-    });
-  }
+  
 });
 
 router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
@@ -209,19 +203,32 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
 });
 
 router.post("/register", (req, res) => {
+  
+  var phoneno = /^\d{10}$/;
+  let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   const { name, email, address, phone_no, password, password2 } = req.body;
   let errors = [];
 
   if (!name || !email || !phone_no || !address || !password || !password2) {
-    errors.push({ msg: "Please enter all fields" });
+    errors.push({ msg: "Please enter a fields " });
   }
+  
+  if (!email.match(regexEmail)) {
+    errors.push({ msg: "Please enter valid email" });
+  } 
+  
+  if (!phone_no.match(phoneno)) {
+    errors.push({ msg: "Please enter 10 digit phone no" });
+  } 
+  if (!password.match(pass)) {
+    errors.push({ msg: "enter a strong password atleast 8 digit upper lower and special case in it " });
+  } 
 
   if (password != password2) {
-    errors.push({ msg: "Passwords do not match" });
-  }
 
-  if (password.length < 6) {
-    errors.push({ msg: "Password must be at least 6 characters" });
+  errors.push({ msg: "Passwords do not match" });
+   
   }
 
   if (errors.length > 0) {
@@ -233,7 +240,7 @@ router.post("/register", (req, res) => {
       password2,
     });
   } else {
-    User.findOne({ email: email }).then((user) => {
+    User.findOne({ email: email  }).then((user) => {
       if (user) {
         errors.push({ msg: "Email already exists" });
         res.render("register", {
@@ -243,6 +250,7 @@ router.post("/register", (req, res) => {
           password,
           password2,
         });
+        
       } else {
         const newUser = new User({
           name,
@@ -275,9 +283,10 @@ router.post("/register", (req, res) => {
         });
       }
     }).catch((err)=>{
-      console.log(err)
+     console.log(err)
     });
   }
+  // res.redirect("/users/register");
 });
 // Login
 router.post("/login", async (req, res, next) => {
@@ -309,7 +318,7 @@ router.get("/logout", (req, res) => {
   req.flash("success_msg", "You are logged out");
   res.redirect("/users/login");
 });
-//student detail edit
+//student detail update
 router.patch('/std/:id',async(req,res)=>{
   
   await User.findByIdAndUpdate(req.params.id, req.body);
@@ -346,3 +355,5 @@ router.get("/delete_student/:id", function (req, res, next) {
   res.redirect("/users/student_profile");
 });
 module.exports = router;
+
+

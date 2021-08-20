@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+  <%- include ("./partials/messages") %>
   
   <body>
     
@@ -18,7 +19,7 @@
         <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
             
 
-        <option id="<%=exam.id%>" value="<%= exam.name %>">
+        <option id="<%=exam.id%>" value="<%= exam.name %>" <%=(selected_exam == exam.name)&&"selected"%>>
           <%= exam.name %>
         </option>
 
@@ -30,11 +31,11 @@
       <div class="imae"></div>
     </form>
 
-    <a id="myAnchor" href="/create_question/<%= exam_name[0].id %>"
+    <a id="myAnchor" href="/create_question/<%= exam_name.id || exam_id %>"
       >add new question</a
     >
 
-    <h1>View all Questions</h1>
+    <h1> view All Questions</h1>
     <table style="border: 1px solid black" class="table">
       <thead class="thead-dark">
         <tr>
@@ -44,22 +45,27 @@
         </tr>
       </thead>
       <tbody>
+        <% if(questions.length==0){ %>
+          <h3>No questions available</h3>
+
+          <% } else{ %>
         <% questions.forEach(function (question , index){ %>
         <tr>
           <td><%= index + 1 %></td>
           <td><%=question.questionName %></td>
           <td>
-            <a href="/question/update/<%= question.id%>/<%=exam_id %>">Edit</a>
+            <a href="/question/update/<%= question.id%>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>">Edit</a>
           </td>
           <td>
             <a
               class="btn btn-raised btn-danger"
-              href="/question/delete/<%= question.id %>/<%= exam_id %>"
+              href="/question/delete/<%= question.id %>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>"
               >Delete</a
             >
           </td>
         </tr>
         <% }) %>
+        <% } %>
       </tbody>
       -->
     </table>

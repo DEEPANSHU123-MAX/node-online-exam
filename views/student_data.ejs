@@ -13,23 +13,15 @@
       </button>
 
   
-  <body> <form action="/users/student_profile" method="GET">
-    <input
-      type="text"
-      name="search"
-      id="search"
-      placeholder="Search for student"
-      class="search"
-    />
-    <button class="search-btn" type="submit">Search</button>
-<div class="imae"></div>
-</form>
+  <body> <div>
+    <input type="text" name="" id="myinput" onkeyup="searchfun()" placeholder="search name" >
+  </div>
 
-    <table  style="border:1px solid black;" class="table">
+    <table id="mytable"  style="border:1px solid black;" class="table">
       
         
-        <thead class="thead-dark">
-            <tr>
+       
+            <tr >
                 <th>Sr.no</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -37,7 +29,7 @@
                 <th>Registration date</th>
                 
             </tr>
-        </thead>
+       
         <tbody>
             <!-- <% users.name %> -->
             <% users.forEach(function (user , index){ %>
@@ -57,11 +49,30 @@
         </tbody>
     </table>
     
-    <!-- <% users.forEach(function (user) { %>
-        <li>  
-            <p><%= user.name %>  <%= user.email %>  <%= user.address %> </p> 
-        </li>                                   
-    <% }) %> -->
-  
+   <script>
+     const searchfun =()=>{
+       let filter = document.getElementById("myinput").value.toUpperCase()
+
+       let myTable = document.getElementById("mytable")
+       let tr =myTable.getElementsByTagName("tr")
+
+       for(var i =0 ; i<tr.length;i++){
+         let td =tr[i].getElementsByTagName("td")[1]
+         if(td){
+           let textvalue = td.textContent||td.innerHTML
+
+           if(textvalue.toUpperCase().indexOf(filter) > -1){
+             tr[i].style.display =""
+           }else{
+             tr[i].style.display = "none"
+           }
+         }
+       }
+     }
+
+     
+
+     
+   </script>
   </body>
 </html>
