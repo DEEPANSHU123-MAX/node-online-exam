@@ -7,9 +7,18 @@
 
 <a href='/exam/create'>Create Exam</a>
 
+
 <div>
     <input type="text" name="" id="input" onkeyup="searchfun()" placeholder="search name" >
   </div>
+  <% if(exams.length>=size){ %>
+    <a class="" href="/exam?page=<%=pages +1%>" >next_page</a>
+ <% }  %>
+   
+        
+ <button class=' '>
+  <a href="/users/logout">logout</a>
+ </button>
 
 <table id="mytable"  style="border:1px solid black;" class="table">
       

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  
+  <h2>Active Exams</h2>
+  <%- include ("./partials/messages") %>
+  <body>
+    <% exams.forEach(function (exam , index){ %>
+    <form action="/test/<%=exam.id%>/startTest" method="GET">
+      <input type="submit"  value="<%=exam.name%>" />
+    </form>
+    <% }) %>
+  </body>
+</html>

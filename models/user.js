@@ -45,12 +45,19 @@ const UserSchema = new mongoose.Schema({
       },
     },
   ],
-  result: [
+  results: [
     {
       examId: mongoose.ObjectId,
-      grade: Number,
-      durtion: Date,
+      exam_name :{type:String , default:""},
+      finalScore: {type:Number,default:0},
+      startTime: {type:Date},
+      endTime: Date,
+      totalMinutesTaken: {type:Number,default:0},
+      answeredQuestions: {type: mongoose.Schema.Types.Mixed,default:{}},
       attempted: Number,
+      unAttempted: Number,
+      totalQuestions: Number,
+      status: {type:Boolean,default:false}
     },
   ],
   type: { type: String, required: true, default: "student" },

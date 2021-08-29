@@ -1,4 +1,9 @@
+
+<%- include ("./partials/messages") %>
 <h1 class="mt-4">Dashboard</h1>
 <p class="lead mb-3">Welcome <%= name %></p>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
 <a href="/users/std/<%= id %>/edit" class="btn btn-secondary">Edit</a>
+
+<a href="/users/active_exams" class="btn btn-secondary">Exams</a>
+<a href="/test/student_results" class="btn btn-secondary">results</a>

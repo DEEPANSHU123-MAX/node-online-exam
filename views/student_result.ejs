@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<%- include ("./partials/messages") %>
+<body>
+    <form action="/test/student_results" method="GET">
+    <select name="search" id="mySelect"   style="width:200px"  >
+        <option  value="">All result</option>
+        <% var options = []; %> <% exams.forEach(function (exam , index){%>
+            
+
+        <option id="<%=exam.id%>" value="<%= exam.name %>" <%=(search_exam.name == exam.name)&&"selected"%> >
+          <%= exam.name %>
+        </option>
+
+        <% } )%>
+      </select>
+      <button class="search-btn" type="submit">Search</button>
+    </form>
+   
+    <table  style="border:1px solid black;" class="table">
+      
+        <h2>View results</h2>
+       
+        <tr >
+            <th>State</th>
+            <th>Grades</th>
+            <th>Review</th>
+           
+            
+        </tr>
+        <tbody>
+            <% if(results.length!=0){ %>
+                <% results.forEach(function (user , index){ %>
+                    <tr>
+                        <td>
+                            Finished submitted <br> <%= user.endTime%><br>
+                             Time taken <%= user.totalMinutesTaken%>minute </td>
+                        <td><h5>Grades</h5><%= user.finalScore%>/<%= user.totalQuestions%></td>
+                        <td> <a class="btn btn-info" href="/test/<%=user.examId%>/result/data">Review</a></td> </td>
+                   
+                     
+                   
+                       
+                    </tr>
+              
+                    <% }) %>
+              <% } else{ %>  
+                <tr>
+                    <td>
+                        Finished Submitted  <%= result.endTime%>
+                         Time taken <%= result.totalMinutesTaken%>minute </td>
+                    <td><h5>Grades</h5><%= result.finalScore%>/<%= result.totalQuestions%></td>
+                    <td> <a class="btn btn-info" href="/test/<%=result.examId%>/result/data">Review</a></td> </td>
+               
+                 
+               
+                   
+                </tr>
+             <% } %>
+         
+          
+           
+        </tbody>
+    </table>
+</body>
+</html>

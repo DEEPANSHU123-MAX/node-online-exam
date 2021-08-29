@@ -8,14 +8,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+  
   </head>
   <%- include ("./partials/messages") %>
   
   <body>
+    <a class="" href="/all_Questions_data?page=<%=pages +1%>" >next_page</a>
+    
     
     <form action="/all_Questions_data" method="GET">
-      <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
-        <option  value="">Select exam</option>
+      <select name="search" id="mySelect"   style="width:200px"  >
+        <option  value="">All question</option>
         <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
             
 
@@ -35,6 +38,8 @@
       >Add new question</a >
 
     <h1> view All Questions</h1>
+    <h3><%=selected_exam%></h3>
+    
     <table style="border: 1px solid black" class="table">
       <thead class="thead-dark">
         <tr>
@@ -53,7 +58,9 @@
           <td><%= index + 1 %></td>
           <td><%=question.questionName %></td>
           <td>
+            
             <a class="btn btn-raised btn-success" href="/question/update/<%= question.id%>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>">Edit</a>
+
           </td>
           <td>
             <a

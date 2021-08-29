@@ -21,6 +21,7 @@ const jwt = require("jsonwebtoken");
 const jwt_secret = "some super secret";
 
 const User = require("../models/user");
+const Exam = require("../models/exam");
 
 const bcrypt = require("bcryptjs");
 
@@ -31,15 +32,15 @@ router.get("/login", (req, res) => res.render("login"));
 
 router.get("/register", (req, res) => res.render("register"));
 
-router.get("/Exam", ensureAuthenticated, (req, res) =>
-  res.render("Exam", { name: req.user.name })
-);
+// router.get("/Exam", ensureAuthenticated, (req, res) =>
+//   res.render("Exam", { name: req.user.name })
+// );
 
-router.get("/student_profile", ensureAuthenticated, (req, res) => {
+router.get("/student_profile", ensureAuthenticated, async(req, res) => {
  
-    User.find({ type: "student" }, (err, user) => {
+  const user = await  User.find({ type: "student" }).sort({ date: -1 })
       res.render("student_data", { users: user });
-    });
+    
   
 });
 
@@ -48,13 +49,13 @@ router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
 );
 
 // Admin  Profile
-router.get("/admin_profile",(req,res)=>{
+router.get("/admin_profile",ensureAuthenticated , isAdmin, (req,res)=>{
   res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address})
 });
 
 //admin password change
   
-router.post("/admin_profile",(req , res)=>{
+router.post("/admin_profile/password",(req , res)=>{
 
   
   
@@ -202,8 +203,8 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
-router.post("/register", (req, res) => {
-  
+router.post("/register", async(req, res) => {
+  try{
   var phoneno = /^\d{10}$/;
   let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
@@ -236,22 +237,42 @@ router.post("/register", (req, res) => {
       errors,
       name,
       email,
+      address,
+      phone_no,
       password,
       password2,
     });
   } else {
-    User.findOne({ email: email  }).then((user) => {
+    const user = await User.findOne({ email: email  }) 
       if (user) {
         errors.push({ msg: "Email already exists" });
         res.render("register", {
           errors,
           name,
           email,
+          address,
+          phone_no,
           password,
           password2,
         });
         
-      } else {
+        
+        
+      } else if(!user){
+        const user = await User.findOne({ phone_no: phone_no  }) 
+        if (user) {
+          errors.push({ msg: "phone no already exists" });
+          res.render("register", {
+            errors,
+            name,
+            email,
+            address,
+            phone_no,
+            password,
+            password2,
+          });
+      }
+    else {
         const newUser = new User({
           name,
           email,
@@ -282,11 +303,13 @@ router.post("/register", (req, res) => {
             .catch((err) => console.log(err));
         });
       }
-    }).catch((err)=>{
-     console.log(err)
-    });
-  }
+    }
+    }
+  
   // res.redirect("/users/register");
+}catch(err){
+  console.log(err)
+}
 });
 // Login
 router.post("/login", async (req, res, next) => {
@@ -354,6 +377,19 @@ router.get("/delete_student/:id", function (req, res, next) {
   });
   res.redirect("/users/student_profile");
 });
+
+
+router.get('/active_exams', ensureAuthenticated , isLoggedIn ,async(req,res)=>{
+  try{
+   
+      const exams = await Exam.find({isActive:true})
+      
+      res.render('Active_exams',{exams})
+  }
+  catch(e){
+      console.log(e.message)
+         
+  }
+})
+
 module.exports = router;
-
-

@@ -58,15 +58,26 @@
               {
     
           var selectedVal = document.getElementById("mySelect").value;
+          
     
           var parsed_data = <%- JSON.stringify(exam_name) %>;
           parsed_data=[...parsed_data];
           const selectedData = parsed_data.find(data=>data.name===selectedVal);
+          console.log(selectedData.name , "-------cnskcnk")
           console.log(selectedData._id);
+          window.localStorage.setItem("selected_id",selectedData._id)
           document.getElementById("form_id").action  =`/add_question/${selectedData._id}`
          
     
              }
+
+
+            window.addEventListener("load",()=>{
+              var selectedId = window.localStorage.getItem("selected_id") ;
+              console.log("load",selectedId);
+              document.getElementById(selectedId).defaultSelected=true
+              document.getElementById("form_id").action  =`/add_question/${selectedId}`
+            })
         </script>
 </body>
 

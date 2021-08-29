@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<%- include ("./partials/messages") %>
+<body>
+    <h4>Instructions</h4>
+    <ul>
+        <li>Total no of questions :<%=total_questions%>.</li>
+        <li>Time alloted : 20 min.</li>
+        <li>Each question carry one mark , no negative marking.</li>
+        <li>Do not refrest the page.</li>
+        <li>Do not refresh the page .😊</li>
+    </ul>
+    <form action="/test/<%=examId%>" method="POST">
+        <input type="submit"  value="Start test" />
+      </form>
+</body>
+</html>

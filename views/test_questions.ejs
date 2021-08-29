@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <%- include ("./partials/messages") %>
+  <body>
+   
+    <form
+      action="/test/update/<%=examId%>/<%=currentQuestionNumber%>/null"
+      id="form_id"
+      method="POST"
+    >
+      <h3>#questions</h3>
+   <%=currentQuestionNumber%> <h2><%=question.questionName %></h2>
+
+      <h4>select option</h4>
+      <input
+        type="radio"
+        id="option1"
+        name="option"
+        <%- isAnswerExist&&isAnswerExist=== "option1" && "checked"   %> 
+        value="<%=question.option1%>"
+        onchange="onChange()"
+ 
+      />
+      <label for="option1"><%=question.option1%></label><br />
+      <input
+        type="radio"
+        id="option2"
+        name="option"
+        <%- isAnswerExist&&isAnswerExist=== "option2" && "checked"   %> 
+        value="<%=question.option2%>"
+       
+        onchange="onChange()"
+      />
+      <label for="option2"><%=question.option2%></label>
+      <br />
+      <input
+        type="radio"
+        id="option3"
+        name="option"
+        <%- isAnswerExist&&isAnswerExist=== "option3" && "checked"   %> 
+        value="<%=question.option3%>"        
+        onchange="onChange()"
+      />
+      <label for="option3"><%=question.option3%></label><br />
+      <input
+        type="radio"
+        id="option4"
+        name="option"
+        <%- isAnswerExist&&isAnswerExist=== "option4" && "checked"   %> 
+        value="<%=question.option4%>"
+        onchange="onChange()"
+      />
+      <label for="option4"><%=question.option4%></label><br />
+    
+      <input type="submit" class="btn btn-success" value="save and next" />
+     
+    </form>
+    <form action=<%=`/test/${examId}/submitTest?_method=PUT`%> method="POST">
+        <input type="submit" value="finish Exam"/>
+    </form>
+    <% for(let questionNumber in answeredQuestions) {%>
+        <a href=<%=`/test/${examId}/${questionNumber}`%>  ><%=questionNumber%> </a>
+    <%}%>
+    <script>
+     
+      function onChange() {
+        const getSelectedValue = document.querySelector(
+          'input[name="option"]:checked'
+        );
+
+  document.getElementById(
+          "form_id"
+        ).action = `/test/update/<%=examId%>/<%=currentQuestionNumber%>/${getSelectedValue.id}`;
+      }
+
+      // let timer = function () {
+      //       var minute = 5;
+      //       var sec = 60;
+      //       setInterval(function () {
+      //          document.getElementById("timer").innerHTML =
+      //             minute + " : " + sec;
+      //          sec--;
+      //          if (sec == 00) {
+      //             minute--;
+      //             sec = 60;
+      //             if (minute == 0) {
+      //                minute = 5;
+      //             }
+      //          }
+      //       }, 1000);
+      //    };
+    </script>
+  </body>
+</html>
