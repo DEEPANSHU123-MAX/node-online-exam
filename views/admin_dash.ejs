@@ -8,9 +8,11 @@
   </head>
   <%- include ("./partials/messages") %>
   <body>
-    <h1>welcome admin <%=name %></h1>
+   
+    <h1>welcome admin </h1>
+   
 
-    <a href="/users/admin_profile" class="btn"> <i class="fa fa-home"></i> My Profile</a>
+    <a href="/users/admin/<%=id %>/edit" class="btn"> <i class="fa fa-home"></i> My Profile</a>
 
     <p class="lead mt-4"><a href="/users/student_profile"><i style='font-size:67px' class='fas'>&#xf501;</i></a></p>
    

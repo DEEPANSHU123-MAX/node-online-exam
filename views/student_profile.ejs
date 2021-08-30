@@ -5,32 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+        
+    <style>
+        h1,h2 {text-align: center;}
+        form {text-align: center;}
+        
+  h1,h2 {
+    background-color: #d5f4e6;
+  }
+  
+      </style>
 </head>
 <body>
+
+    <h1>My Profile</h1>
    
     <form action="/users/std/<%=user._id%>?_method=PATCH" method="POST">
-        <div class="form-group">
+        <i class="fa fa-user fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="name"> Name     :</label>
+         <input  style="margin-left:52px" id="name" name="name" type="text"  maxlenght ="40"  size="40" value="<%=user.name%>" >
+            <br><br>
 
-            <input id="name" name="name" type="text" class="form-control"value="<%=user.name%>" >
-        </div>
-       
-        <div class="form-group">
-   
-            <input name="address"   type="text" class="form-control" placeholder="Image Url"value="<%=user.address%>" >
-        </div>
+
+        <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="Email">Email    :</label>
+        <input  style="margin-left:53px" type="text" value="<%=user.email%>"  name="email"  size="40"><br><br>
+          
+
+        <i class="fa fa-phone fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="phone_no">Phone No. :</label>
+        <input  style="margin-left:20px" type="text" value="<%=user.phone_no%>" name="phone_no"  size="40">
+        <br><br>
+        
+           
+        <i class="fa fa-address-book fa-lg fa-fw" aria-hidden="true"></i>
+        <label for="address">Address  :</label>
+         <input  style="margin-left:30px" name="address"   type="text"  size="40" value="<%=user.address%>" ><br><br>
+        
+            <button type="submit" class="btn btn-primary">Update</button><br><br>
       
-      
-        <div class="form-group">
-            <input type="text" value="<%=user.phone_no%>" name="phone_no"  class="form-control">
-        </div>
-        <div class="form-group">
-            <input type="text" value="<%=user.email%>"  name="email" class="form-control">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Update</button>
-        </div>
     </form>
     
+    
+    <h2>Change Your Password ></h2>
+    <form action= "/users/std/<%=user._id%>/edit" method = "POST" >
+      <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+      <label for="oldpassword"> Old Password:</label>
+      <input type="text" id="oldpassword" name="oldpassword"  size="40" ><br><br>
+
+
+
+      <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+      <label for="newpassword">New Password:</label>
+      <input type="password" id="newpassword" name="newpassword"  size="40"><br><br>
+
+
+      <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
+      <label for="confirmpassword">Confirm Password:</label>
+      <input type="password" id="confirmpassword" name="confirmpassword"  size="40" ><br><br>
+      <button type="submit" class="btn btn-primary" >Submit  </button> 
+     </form>
 
     
 </body>

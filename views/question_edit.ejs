@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
+
     <title>Document</title>
 </head>
 
@@ -11,6 +23,7 @@
 
 <%- include ("./partials/messages") %>
 <body>
+  <h1 class="text-center" style="background-color: rgb(230, 189, 208)">Edit question for <%=exam.name%></h1>
      
     
         <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
@@ -27,7 +40,7 @@
   
         <div class="imae"></div>
        
-    <h3>Edit question for <%=exam.name%></h3>
+    
     <form action="/question/update/<%=questionid%>/<%=exam.id%>" method="POST">
         <h3>#questions</h3>
         
@@ -49,12 +62,13 @@
             <option value="option4">option4</option>
             
           </select>
-          <button type="submit">Update</button>
+          <button type="submit" class="btn btn-success" style= "margin-left: 400px;">Update</button>
+           <a class="btn btn-info" id="cancel" href="/all_Questions_data"  style="margin-left: 100px ;"
+          >cancel</a>
+       
     
     </form>
-    <a class="btn btn-info" id="cancel" href="/all_Questions_data"
-            >cancel</a
-          >
+   
           <script type="">
     
 

@@ -44,24 +44,54 @@ router.get("/student_profile", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
-  res.render("admin_dash", { name: req.user.name })
+  res.render("admin_dash", { name: req.user.name , id:req.user.id})
 );
 
 // Admin  Profile
-router.get("/admin_profile",(req,res)=>{
-  res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address})
+// router.get("/admin_profile",(req,res)=>{
+//   res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address , id:req.user.id})
+// });
+
+
+
+//admin detail update
+router.patch('/admin/:id',async(req,res)=>{
+  
+  await User.findByIdAndUpdate(req.params.id,req.body);
+ 
+ 
+  try
+  {
+      res.redirect("/users/admin_dash")
+  }catch(e)
+  {
+  console.log("Something Went Problem");
+   }
 });
+//show data on admin profile form 
+router.get('/admin/:id/edit',async(req,res)=>{
+ 
+  try{
+   
+      const user = await User.findById(req.params.id)
+      res.render('admin_profile',{user})
+      console.log(user)
+     
+  }
+  catch(e){
+      console.log(e.message)
+          res.render() 
+  }
+  
+  });
+
 
 //admin password change
   
-router.post("/admin_profile",(req , res)=>{
-
-  
-  
+router.post("/admin/:id/edit",(req , res)=>{ 
 
   let session = req.session ;
-  console.log(req.body)
-
+  
   const user_email=session.req.user.email
   
 
@@ -94,7 +124,7 @@ router.post("/admin_profile",(req , res)=>{
   }
   
   req.flash("success_msg", "your password is now changed");
-  res.redirect("admin_dash")
+  res.redirect("/users/admin_dash")
 });
 
 
@@ -291,7 +321,7 @@ router.post("/register", (req, res) => {
 // Login
 router.post("/login", async (req, res, next) => {
   let redirect = "/dashboard";
-  const { email } = req.body;
+  const {email , phone_no} = req.body;
   // console.log(email, "==");
   try {
     const user = await User.findOne({ email });
@@ -318,6 +348,7 @@ router.get("/logout", (req, res) => {
   req.flash("success_msg", "You are logged out");
   res.redirect("/users/login");
 });
+
 //student detail update
 router.patch('/std/:id',async(req,res)=>{
   
@@ -354,6 +385,58 @@ router.get("/delete_student/:id", function (req, res, next) {
   });
   res.redirect("/users/student_profile");
 });
+
+
+
+// student password change 
+
+
+
+router.post("/std/:id/edit",(req , res)=>{
+
+  let session = req.session ;
+  
+console.log(req.body)
+  const user_Email=session.req.user.email
+  
+
+  if (user_Email){
+      var old_password = req.body.oldpassword ;
+      var new_password = req.body.newpassword ;
+       var confirm_password = req.body.confirmpassword ;
+    User.findOne({"email":user_Email},(err,user)=>{
+      if(user!=null){
+          var hash =user.password;
+          bcrypt.compare(old_password,hash,(err,res)=>{
+
+            if(res){
+              if(new_password === confirm_password){
+                bcrypt.hash(new_password,3,(err,hash)=>{
+                  user.password=hash;
+                  user.save(function(err,user){
+                    if(err) return console.error(err)
+
+                    
+
+                    console.log(" your password has been changed");
+                  })
+                })
+              }
+            }
+          })
+      }
+    })
+  }
+  
+  req.flash("success_msg", "your password has been changed");
+  res.redirect("/users/login")
+});
+
+
+
+
+
+
 module.exports = router;
 
 

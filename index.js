@@ -52,6 +52,7 @@ app.use(
 );
 
 // Passport middleware
+app.use(methodOverride('_method'));
 app.use(passport.initialize());
 app.use(passport.session());
 
