@@ -1,6 +1,6 @@
 const express = require("express");
 
-const dotenv = require("dotenv").config();
+ require("dotenv").config();
 
 // console.log(dotenv.parsed);
 
@@ -109,7 +109,7 @@ router.post("/forgot-password", (req, res, next) => {
   const { email } = req.body;
   User.findOne({ email: email }).then((user) => {
     if (!user) {
-      res.send("not exist");
+      res.send("User not exist");
       return;
     }
 
@@ -129,7 +129,7 @@ router.post("/forgot-password", (req, res, next) => {
 
     const message = {
       to: user.email,
-      from: "dktyagi047@gmail.com",
+      from: "deepanshut691@gmail.com",
       subject: "reset your password by using",
       html: `http://localhost:5000/users/reset_password/${user.id}/${token}`,
     };
@@ -212,7 +212,7 @@ router.post("/register", async(req, res) => {
   let errors = [];
 
   if (!name || !email || !phone_no || !address || !password || !password2) {
-    errors.push({ msg: "Please enter a fields " });
+    errors.push({ msg: "Please enter all fields " });
   }
   
   if (!email.match(regexEmail)) {
@@ -317,7 +317,8 @@ router.post("/login", async (req, res, next) => {
   const { email } = req.body;
   // console.log(email, "==");
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne( (email.includes("@"))?{email:email}:{phone_no:email});
+    
     if (!user) {
       req.flash("error_msg", "User is not register");
       res.redirect("login");

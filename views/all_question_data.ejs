@@ -13,7 +13,10 @@
   <%- include ("./partials/messages") %>
   
   <body>
-    <a class="" href="/all_Questions_data?page=<%=pages +1%>" >next_page</a>
+    <% if(questions.length>=size&& size!=""){ %>
+      <a class="" href="/all_Questions_data?page=<%=pages +1%>" >next_page</a>
+   <% }  %>
+  
     
     
     <form action="/all_Questions_data" method="GET">

@@ -63,8 +63,8 @@
           var parsed_data = <%- JSON.stringify(exam_name) %>;
           parsed_data=[...parsed_data];
           const selectedData = parsed_data.find(data=>data.name===selectedVal);
-          console.log(selectedData.name , "-------cnskcnk")
-          console.log(selectedData._id);
+          // console.log(selectedData.name , "-------cnskcnk")
+          // console.log(selectedData._id);
           window.localStorage.setItem("selected_id",selectedData._id)
           document.getElementById("form_id").action  =`/add_question/${selectedData._id}`
          

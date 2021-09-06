@@ -5,9 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+   <style>
+     a:visited
+     {
+       color: green;
+     }
+     a:active
+     {
+       color: black;
+     }
+   </style>
   </head>
   <%- include ("./partials/messages") %>
   <body>
+    <span id="countdown" class="timer"></span>
    
     <form
       action="/test/update/<%=examId%>/<%=currentQuestionNumber%>/null"
@@ -15,7 +26,7 @@
       method="POST"
     >
       <h3>#questions</h3>
-   <%=currentQuestionNumber%> <h2><%=question.questionName %></h2>
+  <h4>Question <%=currentQuestionNumber%></h4>  <h2><%=question.questionName %></h2>
 
       <h4>select option</h4>
       <input
@@ -65,7 +76,7 @@
         <input type="submit" value="finish Exam"/>
     </form>
     <% for(let questionNumber in answeredQuestions) {%>
-        <a href=<%=`/test/${examId}/${questionNumber}`%>  ><%=questionNumber%> </a>
+        <a   href=<%=`/test/${examId}/${questionNumber}`%>  ><%=questionNumber%> </a>
     <%}%>
     <script>
      
@@ -78,6 +89,38 @@
           "form_id"
         ).action = `/test/update/<%=examId%>/<%=currentQuestionNumber%>/${getSelectedValue.id}`;
       }
+
+      var tags = document.getElementsByTagName("a");
+
+for(var i = 0; i < tags.length; i++) {
+    tags[i].onclick = function() {
+        this.style.backgroundColor = 'red';
+        return  ;   
+    }
+}
+// var seconds = 120;
+// window.localStorage.setItem("Time",seconds)
+//     function secondPassed() {
+//     var minutes = Math.round((seconds - 30)/60);
+//     var remainingSeconds = seconds % 60;
+//     if (remainingSeconds < 10) {
+//         remainingSeconds = "0" + remainingSeconds; 
+//     }
+//     document.getElementById('countdown').innerHTML = minutes + ":" +    remainingSeconds;
+//     if (seconds == 0) {
+//         clearInterval(countdownTimer);
+//         document.getElementById('countdown').innerHTML = "Buzz Buzz";
+//     } else {    
+//         seconds--;
+//     }
+//     }
+
+//     window.addEventListener("load",()=>{
+//               var selectedTime = window.localStorage.getItem("Time") ;
+//               console.log("load",selectedTime);
+             
+//             })
+// var countdownTimer = setInterval('secondPassed()', 1000);
 
       // let timer = function () {
       //       var minute = 5;

@@ -1,4 +1,5 @@
 const user = require("../models/user");
+const mongoose = require("mongoose");
 module.exports = {
   ensureAuthenticated: function (req, res, next) {
     if (req.isAuthenticated()) {
