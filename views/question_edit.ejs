@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"
-          href=
-"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     
     <script src=
 "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
@@ -23,22 +21,15 @@
 
 <%- include ("./partials/messages") %>
 <body>
-  <h1 class="text-center" style="background-color: rgb(230, 189, 208)">Edit question for <%=exam.name%></h1>
+<header>
+  <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top:10px;">
+    <span class="glyphicon glyphicon-log-out"></span>logout</a>
+  </header>
+    <br>
+
+  <h1 class="text-center" style="background-color: rgb(230, 189, 208);margin-top:30px;">Edit question for <%=exam.name%></h1>
      
     
-        <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
-          <option  value="">Select exam</option>
-          <% var options = []; %> <% exams.forEach(function (exam , index){%>
-              
-  
-          <option id="<%=exam.id%>" value="<%= exam.name %>" >
-            <%= exam.name %>
-          </option>
-  
-          <% } )%>
-        </select>
-  
-        <div class="imae"></div>
        
     
     <form action="/question/update/<%=questionid%>/<%=exam.id%>" method="POST">
@@ -47,13 +38,13 @@
         <textarea id="questionName"  name="questionName" rows="4" cols="50"> <%=question.questionName%></textarea>
         <h3>select option</h3>
         <label for="option1">option1</label>
-        <input type="text" id="option1" value="<%=question.option1%>"name="option1" ><br>
+        <input type="text" id="option1" value="<%=question.option1%>"name="option1" ><br><br>
         <label for="option2">option2</label> 
-        <input type="text" id="option2" value="<%=question.option2%>" name="option2" ><br>
+        <input type="text" id="option2" value="<%=question.option2%>" name="option2" ><br><br>
         <label for="option3">option3</label>
-        <input type="text" id="option3" value="<%=question.option3%>" name="option3" ><br>
+        <input type="text" id="option3" value="<%=question.option3%>" name="option3" ><br><br>
         <label for="option4">option4</label>
-        <input type="text" id="option4" value="<%=question.option4%>" name="option4" ><br>
+        <input type="text" id="option4" value="<%=question.option4%>" name="option4" ><br><br>
         
         <h4>correct option</h4> <select name="correctOption"  id="correctOption">
             <option value="option1">option1</option>
@@ -62,30 +53,18 @@
             <option value="option4">option4</option>
             
           </select>
+          <div>
           <button type="submit" class="btn btn-success" style= "margin-left: 400px;">Update</button>
            <a class="btn btn-info" id="cancel" href="/all_Questions_data"  style="margin-left: 100px ;"
           >cancel</a>
-       
+          </div>
     
     </form>
    
-          <script type="">
-    
-
-            function updateid()
-              {
-    
-          var selectedVal = document.getElementById("mySelect").value;
-    
-          var parsed_data = <%- JSON.stringify(exams) %>;
-          parsed_data=[...parsed_data];
-          const selectedData = parsed_data.find(data=>data.name===selectedVal);
-          console.log(selectedData._id);
-          document.getElementById("form_id").action  =`/add_question/${selectedData._id}`
          
+       
     
-             }
-        </script>
+        
 </body>
 
 </html>

@@ -21,25 +21,26 @@ const jwt = require("jsonwebtoken");
 const jwt_secret = "some super secret";
 
 const User = require("../models/user");
+const Exam = require("../models/exam");
 
 const bcrypt = require("bcryptjs");
 
 const passport = require("passport");
 const { getMaxListeners } = require("../models/user");
 
-router.get("/login", (req, res) => res.render("login"));
+router.get("/login", (req, res) => res.render("welcome"));
 
 router.get("/register", (req, res) => res.render("register"));
 
-router.get("/Exam", ensureAuthenticated, (req, res) =>
-  res.render("Exam", { name: req.user.name })
-);
+// router.get("/Exam", ensureAuthenticated, (req, res) =>
+//   res.render("Exam", { name: req.user.name })
+// );
 
-router.get("/student_profile", ensureAuthenticated, (req, res) => {
+router.get("/student_profile", ensureAuthenticated, async(req, res) => {
  
-    User.find({ type: "student" }, (err, user) => {
+  const user = await  User.find({ type: "student" }).sort({ date: -1 })
       res.render("student_data", { users: user });
-    });
+    
   
 });
 
@@ -48,9 +49,14 @@ router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
 );
 
 // Admin  Profile
-// router.get("/admin_profile",(req,res)=>{
-//   res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address , id:req.user.id})
-// });
+ router.get("/admin_profile",(req,res)=>{
+  res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address , id:req.user.id})
+ });
+
+
+
+
+  
 
 
 
@@ -88,7 +94,7 @@ router.get('/admin/:id/edit',async(req,res)=>{
 
 //admin password change
   
-router.post("/admin/:id/edit",(req , res)=>{ 
+router.post("/admin_profile/password",(req , res)=>{ 
 
   let session = req.session ;
   
@@ -158,7 +164,7 @@ router.post("/forgot-password", (req, res, next) => {
 
     const message = {
       to: user.email,
-      from: "dktyagi047@gmail.com",
+      from: "deepanshut691@gmail.com",
       subject: "reset your password by using",
       html: `http://localhost:5000/users/reset_password/${user.id}/${token}`,
     };
@@ -232,8 +238,8 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
-router.post("/register", (req, res) => {
-  
+router.post("/register", async(req, res) => {
+  try{
   var phoneno = /^\d{10}$/;
   let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
@@ -262,26 +268,46 @@ router.post("/register", (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render("register", {
+    res.render("welcome", {
       errors,
       name,
       email,
+      address,
+      phone_no,
       password,
       password2,
     });
   } else {
-    User.findOne({ email: email  }).then((user) => {
+    const user = await User.findOne({ email: email  }) 
       if (user) {
         errors.push({ msg: "Email already exists" });
-        res.render("register", {
+        res.render("welcome", {
           errors,
           name,
           email,
+          address,
+          phone_no,
           password,
           password2,
         });
         
-      } else {
+        
+        
+      } else if(!user){
+        const user = await User.findOne({ phone_no: phone_no  }) 
+        if (user) {
+          errors.push({ msg: "phone no already exists" });
+          res.render("welcome", {
+            errors,
+            name,
+            email,
+            address,
+            phone_no,
+            password,
+            password2,
+          });
+      }
+    else {
         const newUser = new User({
           name,
           email,
@@ -312,16 +338,18 @@ router.post("/register", (req, res) => {
             .catch((err) => console.log(err));
         });
       }
-    }).catch((err)=>{
-     console.log(err)
-    });
-  }
+    }
+    }
+  
   // res.redirect("/users/register");
+}catch(err){
+  console.log(err)
+}
 });
 // Login
 router.post("/login", async (req, res, next) => {
   let redirect = "/dashboard";
-  const {email , phone_no} = req.body;
+  const {email } = req.body;
   // console.log(email, "==");
   try {
     const user = await User.findOne({ email });
@@ -352,9 +380,10 @@ router.get("/logout", (req, res) => {
 //student detail update
 router.patch('/std/:id',async(req,res)=>{
   
-  await User.findByIdAndUpdate(req.params.id, req.body);
+ 
   try
   {
+    await User.findByIdAndUpdate(req.params.id, req.body);
       res.redirect("/dashboard")
   }catch(e)
   {
@@ -429,7 +458,7 @@ console.log(req.body)
   }
   
   req.flash("success_msg", "your password has been changed");
-  res.redirect("/users/login")
+  res.redirect("/dashboard")
 });
 
 
@@ -437,6 +466,20 @@ console.log(req.body)
 
 
 
-module.exports = router;
 
 
+
+router.get('/active_exams', ensureAuthenticated , isLoggedIn ,async(req,res)=>{
+  try{
+   
+      const exams = await Exam.find({isActive:true})
+      
+      res.render('Active_exams',{exams})
+  }
+  catch(e){
+      console.log(e.message)
+         
+  }
+})
+
+module.exports = router ;

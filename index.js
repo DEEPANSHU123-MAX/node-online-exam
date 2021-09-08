@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const indexroute = require("./routes/index");
 const userroute = require("./routes/users");
+const testroute = require("./routes/test");
 const methodOverride = require('method-override')
 const examroutes = require("./routes/exam");
 const expresslayouts = require("express-ejs-layouts");
@@ -31,8 +32,10 @@ mongoose
   .catch((err) => console.log(err));
 
 //body parser
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
+
 
 // Passport Config
 require("./config/passport")(passport);
@@ -72,7 +75,6 @@ app.use(function (req, res, next) {
 });
 
 const PORT = process.env.port || 5000;
-
 //ejs
 app.use(expresslayouts);
 app.set("view engine", "ejs");
@@ -82,5 +84,6 @@ app.set("view engine", "ejs");
 app.use(indexroute);
 app.use("/", examroutes);
 app.use("/users", userroute);
+app.use("/test", testroute);
 
 app.listen(PORT, () => console.log(`Server is set up on ${PORT}`));

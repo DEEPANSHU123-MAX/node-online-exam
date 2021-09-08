@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     
+    <link rel="stylesheet"
+          href=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
+
    
   
     <title>Document</title>
@@ -21,31 +34,59 @@ h1,h2 {
 </head>
 <body>
 
+  
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+  </header><br>
+
+
 <h1>      My Profile       </h1>
 
 
     <form  action="/users/admin/<%=user.id%>?_method=PATCH" method="POST">
       <i class="fa fa-user fa-lg fa-fw" aria-hidden="true"></i>
         <label for="name"> Name     :</label>
-        <input style="margin-left:52px"  type="text" id="name" name="name" maxlenght ="40"  size="40" value="<%=user.name%>"  >
+        <input style="margin-left:52px"  type="text" id="name" name="name" maxlenght ="40"  size="40" value="<%=user.name%>" disabled  >
+        <div style="display: inline;">
+          <button type="button" value="Submit" onclick="toggle1()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div>
         <br><br>
           
 
 
         <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
         <label for="Email">Email    :</label>
-        <input style="margin-left:53px" type="text" id="Email" name="Email"  size="40" value="<%=user.email%>">
+        <input style="margin-left:53px" type="text" id="Email" name="Email"  size="40" value="<%=user.email%>" disabled >
+        <div style="display: inline;">
+          <button type="button" value="Submit" onclick="toggle2()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div>
         <br><br>
 
         <i class="fa fa-phone fa-lg fa-fw" aria-hidden="true"></i>
         <label for="phone_no">Phone No. :</label>
-        <input style="margin-left:20px" type="text" id="phone_no" name="phone_no"  size="40" value="<%=user.phone_no%>">
+        <input style="margin-left:20px" type="text" id="phone_no" name="phone_no"  size="40" value="<%=user.phone_no%>" disabled>
+        <div style="display: inline;">
+          <button type="button" value="Submit" onclick="toggle3()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div>
           <br><br>
 
 
         <i class="fa fa-address-book fa-lg fa-fw" aria-hidden="true"></i>
         <label for="address">Address  :</label>
-        <input style="margin-left:30px" type="text" id="address" name="address"  size="40" value="<%=user.address%>" >
+        <input style="margin-left:30px" type="text" id="address" name="address"  size="40" value="<%=user.address%>" disabled >
+        <div style="display: inline;">
+          <button type="button" value="Submit" onclick="toggle4()">
+            <i style="font-size: 20px;" class="fa fa-edit" aria-hidden="true"></i>
+         </button>
+        </div>
         <br><br>
         
           <button type="submit" class="btn btn-primary">Update</button><br><br>
@@ -56,7 +97,7 @@ h1,h2 {
     
 
       <h2>Change Password</h2>
-      <form action= "/users/admin/<%=user.id %>/edit" method = "POST" >
+      <form action= "/users/admin_profile/password" method = "POST" >
         <i class="fa fa-lock fa-lg fa-fw" aria-hidden="true"></i>
         <label for="oldpassword"> Old Password:</label>
         <input type="text" id="oldpassword" name="oldpassword"  size="40" ><br><br>
@@ -72,14 +113,27 @@ h1,h2 {
         <label for="confirmpassword">Confirm Password:</label>
         <input type="password" id="confirmpassword" name="confirmpassword"  size="40" ><br><br>
         <button type="submit" class="btn btn-primary" >Submit  </button> 
-       </form>
-
-        
-
-        
+       </form> 
+              
+<script>
+  function toggle1() 
+ {
+   document.getElementById("name").disabled = !document.getElementById("name").disabled;
+ }
+ function toggle2() 
+ {
+   document.getElementById("Email").disabled = !document.getElementById("Email").disabled;
+ }
+ function toggle3() 
+ {
+   document.getElementById("phone_no").disabled = !document.getElementById("phone_no").disabled;
+ }
+ function toggle4() 
+ {
+   document.getElementById("address").disabled = !document.getElementById("address").disabled;
+ }
+ 
+ </script>  
 </body>
-
-
-  
 
 </html>

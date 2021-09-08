@@ -5,9 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
-    <link rel="stylesheet"
-          href=
-"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+ 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     
     <script src=
 "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
@@ -20,8 +19,14 @@
     
 <%- include ("./partials/messages") %>
 <body>
+  
+  <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top:20px;">
+    <span class="glyphicon glyphicon-log-out"></span>logout</a>
 
-  <h1 class="text-center" style="background-color: rgb(230, 189, 208)">Create New Question</h1>
+<br>
+
+
+  <h1 class="text-center" style="background-color: rgb(230, 189, 208);margin-top: 30px;">Create New Question</h1>
      
     
         <select  name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px" >
@@ -61,8 +66,8 @@
             
           </select><br><br>
          
-        <input type="submit" class="btn btn-success"  value="Submit" style= "margin-left: 400px;" >
-        <a class="btn btn-info pull-right"  id="cancel" href="/all_Questions_data" style="margin-right: 300px ;margin-bottom:30px;"
+        <input type="submit" class="btn btn-success"  value="Submit" style= "margin-left: 400px;margin-bottom:20px;" >
+        <a class="btn btn-info pull-right"  id="cancel" href="/all_Questions_data" style="margin-left: 100px ;margin-bottom:20px;"
       >cancel</a>
       </div>
       
@@ -77,15 +82,26 @@
               {
     
           var selectedVal = document.getElementById("mySelect").value;
+          
     
           var parsed_data = <%- JSON.stringify(exam_name) %>;
           parsed_data=[...parsed_data];
           const selectedData = parsed_data.find(data=>data.name===selectedVal);
+          console.log(selectedData.name , "-------cnskcnk")
           console.log(selectedData._id);
+          window.localStorage.setItem("selected_id",selectedData._id)
           document.getElementById("form_id").action  =`/add_question/${selectedData._id}`
          
     
              }
+
+
+            window.addEventListener("load",()=>{
+              var selectedId = window.localStorage.getItem("selected_id") ;
+              console.log("load",selectedId);
+              document.getElementById(selectedId).defaultSelected=true
+              document.getElementById("form_id").action  =`/add_question/${selectedId}`
+            })
         </script>
 </body>
 

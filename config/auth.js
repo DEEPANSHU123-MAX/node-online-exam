@@ -5,7 +5,7 @@ module.exports = {
       return next();
     }
 
-    req.flash("error_msg", "Please log in to view that resource");
+    req.flash("error_msg", "Please log in to view the resource");
     res.redirect("/users/login");
   },
   forwardAuthenticated: function (req, res, next) {
@@ -17,21 +17,23 @@ module.exports = {
   isAdmin(req, res, next) {
     if (req.user.type == "admin") {
       return next();
-    }
-    req.flash("error_msg", "only admin allowed to see that source");
-    res.redirect("/users/login");
+    } 
+      req.flash("error_msg", "only admin allowed to see that source");
+      res.redirect("/dashboard");
+    
+   
   },
   isLoggedIn(req, res, next) {
-    console.log("---------------------------");
-    console.log(req.user, "0-0-0-0---0-");
-    if (!req.user) {
-      next();
-    }
-    const userType = req.user?.type;
+    // console.log("---------------------------");
+    // console.log(req.user, "0-0-0-0---0-");
+    
+    const userType = req.user.type;
     if (userType == "student") {
-      res.redirect("/dashboard");
+      return next(); 
+     
     } else if (userType == "admin") {
       res.redirect("/users/admin_dash");
+    
     }
   },
 };

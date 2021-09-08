@@ -10,15 +10,17 @@ const { formatDateForInput } = require("../Utils");
 const router = new express.Router();
 
 const Exam = require("../models/exam");
+const User = require("../models/user");
+const paginate = require("paginate-array");
 
 //---------------------------------------exam------------------------------------------
 // exam create - name,date
 // route - /exam POST
-router.get("/exam/create", (req, res) => {
+router.get("/exam/create", ensureAuthenticated , isAdmin, (req, res) => {
   res.render("exam_create");
 });
 
-router.post("/exam", async (req, res) => {
+router.post("/exam", ensureAuthenticated , isAdmin, async (req, res) => {
   // console.log(req.body);
   const exams = await Exam.find({});
   var found = false;
@@ -77,8 +79,26 @@ router.get("/exam/delete/:id", async (req, res) => {
 });
 
 router.get("/exam", ensureAuthenticated, isAdmin, async (req, res) => {
-  const exams = await Exam.find({}); // this will return an array of all exams
-  res.render("all_exams", { exams });
+  try{
+    let {page , size} = req.query
+    if(!page){
+      page = 1
+    }
+    if(!size){
+      size=20
+    }
+    const limit = parseInt(size)
+    const pages = parseInt(page)
+    const skip =(page-1)*size
+    const exams = await Exam.find({}).limit(limit).skip(skip); 
+    console.log(exams)// this will return an array of all exams
+    
+    
+  res.render("all_exams", { exams , pages,size});
+  }catch(err){
+    res.status(400).send();
+  }
+  
 });
 
 // router.get("/select_Exam_data", ensureAuthenticated, isAdmin,async (req, res) => {
@@ -100,50 +120,77 @@ router.get("/exam/:id/active", async (req, res) => {
 
 //---------------------------------------question------------------------------------------
 
-router.get("/all_Questions_data", async (req, res) => {
-  const exam_dropdown = await Exam.find({});
+router.get("/all_Questions_data", ensureAuthenticated , isAdmin , async (req, res) => {
+  const exam_dropdown = await Exam.find({}).sort({ date: -1 });
 
   if (req.query.search) {
     const exam = await Exam.find({ name: req.query.search });
-    
 
     exam.forEach((x) => {
       var name = x.questions;
-      console.log(x.name)
+      console.log(x.name);
       if (name.length != 0) {
         res.render("all_question_data", {
           questions: name,
           exam_name: exam_dropdown,
           exam_id: x.id,
           selected_exam: x.name,
+          pages:"",
+          size:""
         });
       } else {
-        
         res.render("all_question_data", {
           questions: [],
           exam_name: exam_dropdown,
           exam_id: x.id,
           selected_exam: x.name,
+          pages:"",
+          size:""
         });
       }
     });
   } else {
-    // console.log(exam_dropdown)
+    
+   
     let allQuestions = [];
     let examIds = [];
     exam_dropdown.forEach((exam) => {
-      // [examid1,examid1,examid2]
-      // [ques1,ques2] 
+     
       examIds = [...examIds, ...Array(exam.questions.length).fill(exam.id)];
       allQuestions = [...allQuestions, ...exam.questions];
-     
+      
     });
+    
+     let {page , size} = req.query
+    if(!page){
+      page = 1;
+    }
+    if(!size){
+      size=20
+    }
+    const limit = parseInt(size)
+    const pages = parseInt(page)
+    const startindex = (pages-1)*limit
+    const endindex = (pages)*limit
+   
+    // console.log(allQuestions)
+    console.log(examIds)
+    
+    const Questions = allQuestions.slice(startindex ,endindex)
+    const updated_examid =examIds.slice(startindex ,endindex)
+    
+ 
     res.render("all_question_data", {
-      questions: allQuestions,
+      questions: Questions,
       exam_name: exam_dropdown,
-      exam_id: examIds,
+      exam_id: updated_examid,
       selected_exam: null,
+      pages,
+      size,
+      
+      
     });
+   
   }
 });
 
@@ -151,16 +198,18 @@ router.get("/all_Questions_table/:id", async (req, res) => {
   const id = req.params.id;
   const exam = await Exam.findById({ _id: id });
   const exam_dropdown = await Exam.find({});
+  const pages =""
 
   res.render("all_question_data", {
     questions: exam.questions,
     exam_name: exam_dropdown,
     exam_id: exam.id,
-    selected_exam:exam.name
+    selected_exam: exam.name,
+    pages,
   });
 });
 
-router.get("/question", isAdmin, async (req, res) => {
+router.get("/question",ensureAuthenticated ,  isAdmin, async (req, res) => {
   const exam = await Exam.find({});
   res.redirect("/question");
 });
@@ -169,34 +218,39 @@ router.get("/question", isAdmin, async (req, res) => {
 // route - question/edit/:id patch
 
 router.get("/question/update/:questionid/:examid", async (req, res) => {
-  const exams = await Exam.find({});
-  const questionid = req.params.questionid;
-  const exam = await Exam.findById({ _id: req.params.examid });
-  exam.questions.forEach((ques) => {
-    if (ques._id == questionid) {
-      const question =ques
-      res.render("question_edit", { exam, question, questionid ,exams});
-    }
-  });
+  try{
+    const exams = await Exam.find({});
+    const questionid = req.params.questionid;
+    const exam = await Exam.findById({ _id: req.params.examid });
+    exam.questions.forEach((ques) => {
+      if (ques._id == questionid) {
+        const question = ques;
+        res.render("question_edit", { exam, question, questionid, exams });
+      }
+    });
+  }catch(err){
+    console.log(err)
+  }
+ 
 });
 
 router.post("/question/update/:questionid/:examid", async (req, res) => {
   const exam_id = req.params.examid;
   const question_id = req.params.questionid;
-  const{questionName ,option1 , option2 , option3 , option4 ,correctOption} = req.body
+  const { questionName, option1, option2, option3, option4, correctOption } =
+    req.body;
   const exam = await Exam.updateOne(
     {
       "questions._id": question_id,
     },
     {
       $set: {
-        "questions.$.questionName":questionName ,
-        "questions.$.option1":option1 ,
-        "questions.$.option2":option2 ,
-        "questions.$.option3":option3 ,
-        "questions.$.option4":option4 ,
-        "questions.$.correctOption":correctOption ,
-
+        "questions.$.questionName": questionName,
+        "questions.$.option1": option1,
+        "questions.$.option2": option2,
+        "questions.$.option3": option3,
+        "questions.$.option4": option4,
+        "questions.$.correctOption": correctOption,
       },
     }
   );
@@ -219,7 +273,7 @@ router.get("/question/delete/:id/:exam_id", async (req, res) => {
 
 router.get("/create_question", async (req, res) => {
   const exam_name = await Exam.find({});
-  res.render("create_question", { exam_name});
+  res.render("create_question", { exam_name });
 });
 
 //add question
@@ -236,14 +290,121 @@ router.post("/add_question/:id", async (req, res) => {
   } else {
     const exam = await Exam.findById({ _id: req.params.id });
     const key = req.body.correctOption;
-    const data = { ...req.body, ...{ correctOption: req.body[key] } };
+    console.log(key)
+    const data = { ...req.body, ...{ correctOption: key } };
     exam.questions.push(data);
-    console.log(exam.name);
+    
     await exam.save();
   }
   res.redirect(`back`);
 });
 
 //---------------------------------------question------------------------------------------
+//---------------------------------------results for admin------------------------------------------
+
+router.get("/results", async (req, res) => {
+  
+  const users = await User.find({}).sort({ date: -1 });
+  // users.forEach(user=>{
+  //   let username = user.name
+  //   let userEmail = user.userEmail
+  //   user.results.forEach(exam=>{
+  //     console.log(exam)
+      
+  //   })
+  // })
+  res.render("admin_result_page", { users });
+});
+//---------------------------------------results for admin------------------------------------------
 
 module.exports = router;
+
+
+
+
+
+
+// var phoneno = /^\d{10}$/;
+// let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+// var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+// const { name, email, address, phone_no, password, password2 } = req.body;
+// let errors = [];
+
+// if (!name || !email || !phone_no || !address || !password || !password2) {
+//   errors.push({ msg: "Please enter a fields " });
+// }
+
+// if (!email.match(regexEmail)) {
+//   errors.push({ msg: "Please enter valid email" });
+// } 
+
+// if (!phone_no.match(phoneno)) {
+//   errors.push({ msg: "Please enter 10 digit phone no" });
+// } 
+// if (!password.match(pass)) {
+//   errors.push({ msg: "enter a strong password atleast 8 digit upper lower and special case in it " });
+// } 
+
+// if (password != password2) {
+
+// errors.push({ msg: "Passwords do not match" });
+ 
+// }
+
+// if (errors.length > 0) {
+//   res.render("register", {
+//     errors,
+//     name,
+//     email,
+//     password,
+//     password2,
+//   });
+// } else {
+//   User.findOne({ email: email  }).then((user) => {
+//     if (user) {
+//       errors.push({ msg: "Email already exists" });
+//       res.render("register", {
+//         errors,
+//         name,
+//         email,
+//         password,
+//         password2,
+//       });
+      
+      
+      
+//     } else {
+//       const newUser = new User({
+//         name,
+//         email,
+//         address,
+//         phone_no,
+//         password,
+//       });
+//       const token = jwt.sign(
+//         { _id: newUser._id.toString() },
+//         "deepanshu tyagi"
+//       );
+//       newUser.tokens = newUser.tokens.concat({ token });
+      
+
+//       //hashing a
+
+//       bcrypt.hash(newUser.password, 10, function (err, hash) {
+//         if (err) throw err;
+//         //hashed a password
+//         newUser.password = hash;
+//         //save user
+//         newUser
+//           .save()
+//           .then(() => {
+//             req.flash("success_msg", "you are now register and can log in");
+//             res.redirect("login");
+//           })
+//           .catch((err) => console.log(err));
+//       });
+//     }
+//   }).catch((err)=>{
+//    console.log(err)
+//   });
+// }

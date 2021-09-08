@@ -1,14 +1,243 @@
-<div class="row mt-5">
-  <div class="col-md-6 m-auto">
-    <h1>Welcome to OES</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
 
-    <div class="card card-body text-center">
-      <!-- <h1><i class="fab fa-node-js fa-3x"></i></h1> -->
-      <p>Create an account or login</p>
-      <a href="/users/register" class="btn btn-primary btn-block mb-2"
-        >Register</a
-      >
-      <a href="/users/login" class="btn btn-secondary btn-block">Login</a>
-    </div>
-  </div>
+<script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+</script>
+
+    <title>login and registration form</title>
+   <style>
+       
+*{
+    margin : 0;
+    padding: 0 ;
+}
+
+.head{
+    text-align: center;
+    top: 6%;
+}
+
+.hero{
+
+height : 90%;
+width:80%;
+background-position: center;
+background-size: cover;
+position: absolute;
+background-color:white;
+}
+
+.form-box{
+    float:right ;
+width:380px ;
+height:550px ;
+
+position: relative;
+margin: 3% auto;
+background-color:rgb(175, 218, 255);
+padding : 4px;
+overflow: hidden;
+
+}
+
+.button-box
+{
+    width : 220px ;
+    margin: 35px auto;
+    position: relative;
+}
+
+.toggle-btn
+{
+padding : 10px 30px;
+cursor: pointer;
+background: transparent;
+border: 0;
+outline: none;
+position: relative;
+}
+
+#btn{ 
+    top:0;
+    left: 0;
+    position :absolute;
+    width: 110px;
+    height: 100%;
+    background: rgb(255, 54, 71);
+}
+
+.input-group{
+    top: 150px;
+    position: absolute;
+    width:280px;
+    transition: 0.5s;
+}
+
+span.psw{
+    
+    display: block;
+    float: right;
+}
+
+.input-field{
+    width:100%;
+    padding: 10px 0;
+    margin: 5px 0;
+    border-left : 0;
+    border-right:0;
+    border-bottom:1px solid #999;
+    outline : none;
+    background: transparent;
+}
+
+#submit-btn{
+
+    width: 65%;
+    padding:10px 20px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+   
+}
+
+
+#login{
+    left: 50px;
+}
+
+
+#register{
+    left: 450px;
+}
+   </style>
+ <%- include ("./partials/messages") %>
+</head>
+
+<body>
+    
+    <div class ="head">
+  <h1 style="color: lightcoral;margin-top: 5px;">WELCOME TO OES</h1>
+  
 </div>
+
+    <div class= "hero">
+      
+      <i class='fas' style='font-size:70px;margin-top:200px'>&#9997;</i> 
+        <i class='fas fa-laptop' style='font-size:80px;margin-top:230px;margin-left: 120px;'></i>
+        <i class='far fa-list-alt' style='font-size:80px;margin-top:230px;margin-left: 120px;'></i>
+       
+        <div class="form-box">
+            
+            <div class ="button-box">
+                <div id="btn"></div>
+               
+              
+               
+                <button type= button class= "toggle-btn" onclick="login()">Login </button>
+                <button type= button class= "toggle-btn" onclick="register()">Register </button>
+            </div>
+            <form id ="login" class="input-group" action="/users/login" method="POST">
+               
+                <input type="text" id="phone_no-or-email" name="email" class ="input-field" placeholder="Enter Email or phone_no" required>
+                <input type="password" id="password" name="password" class ="input-field" placeholder="Password" required>
+                <span class="psw"> <a href="/users/forgot-password">Forgot password?</a></span>
+                <button type="submit" id="submit-btn"  class="btn btn-primary btn-block" >Login </button>
+               
+            </form>
+            <form id ="register" class = "input-group" action="/users/register" method="POST">
+             
+                    <input
+                      type="name"
+                      id="name"
+                      name="name"
+                      class="input-field"
+                      placeholder="Enter Name"
+                      value="<%= typeof name != 'undefined' ? name : '' %>"
+                    />
+                
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      class="input-field"
+                      placeholder="Enter Email"
+                      value="<%= typeof email != 'undefined' ? email : '' %>"
+                    />
+                
+                    <input
+                      type="address"
+                      id="address"
+                      name="address"
+                      class="input-field"
+                      placeholder="Enter address"
+                      value="<%= typeof address != 'undefined' ? address : '' %>"
+                    />
+                
+                
+                    <input
+                      type="number"
+                      id="phone_no"
+                      name="phone_no"
+                      class="input-field"
+                      placeholder="Enter Phone number"
+                      value="<%= typeof phone_no != 'undefined' ? phone_no : '' %>"
+                      maxlength="10"/>
+                 
+                   
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      class="input-field"
+                      placeholder="Create Password"
+                      value="<%= typeof password != 'undefined' ? password : '' %>"
+                    />
+                
+                    <input
+                      type="password"
+                      id="password2"
+                      name="password2"
+                      class="input-field"
+                      placeholder="Confirm Password"
+                      value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
+                    />
+                 
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Register
+                  </button>
+                </form>
+               
+            </form>
+        </div>
+    </div>
+    <script>
+        var x =document.getElementById("login");
+        var y =document.getElementById("register");
+        var z =document.getElementById("btn");
+
+        function register(){
+           x.style.left = "-400px" ;
+           y.style.left = "50px" ;
+           z.style.left = "110px" ;
+        }
+
+        
+        function login(){
+           x.style.left = "50px" ;
+           y.style.left = "450px" ;
+           z.style.left = "0" ;
+        }
+    </script>
+    
+</body>
+</html>

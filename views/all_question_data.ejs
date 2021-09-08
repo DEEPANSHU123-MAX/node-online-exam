@@ -7,9 +7,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet"
-          href=
-"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+   
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     
     <script src=
 "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
@@ -19,20 +18,30 @@
 "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
   </script>
     <title>Document</title>
+  
   </head>
   <%- include ("./partials/messages") %>
   
   <body>
+
+    
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a><br>
+
+  </header><br>
     <h1 class="text-center" style="background-color: rgb(236, 111, 117)"> View All Questions</h1>
 
     
-    <a href="/users/logout" class='btn btn-secondary btn-sm pull-right' role="button">
-      <span class="glyphicon glyphicon-log-out"></span>logout</a>
 
+      <% if(questions.length>=size){ %>
+        <a class="" href="/all_Questions_data?page=<%=pages +1%>" >next_page</a>
+     <% }  %>
+    
     
     <form action="/all_Questions_data" method="GET">
-      <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
-        <option  value="">Select exam</option>
+      <select name="search" id="mySelect"   style="width:200px"  >
+        <option  value="">All question</option>
         <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
             
 
@@ -50,10 +59,11 @@
 
     <a id="" href="/create_question" class="btn btn-primary btn-sm" role="button" >Add new question</a >
 
+    <h3><%=selected_exam%></h3>
     
-    <table style="border: 1px solid black" class="table">
+    <table style="border: 2px solid black" class="table">
       <thead class="thead-dark">
-        <tr>
+        <tr  style="border: 2px solid black">
           <th>Sr.no</th>
           <th>Questions</th>
           <th>options</th>
@@ -69,7 +79,9 @@
           <td><%= index + 1 %></td>
           <td><%=question.questionName %></td>
           <td>
+            
             <a class="btn btn-raised btn-success" href="/question/update/<%= question.id%>/<%=Array.isArray(exam_id)?exam_id[index]:exam_id %>">Edit</a>
+
           </td>
           <td>
             <a

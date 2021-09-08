@@ -25,6 +25,7 @@
     "mongodb": "^2.2.33",
     "mongoose": "^5.13.2",
     "mongoose-validator": "^2.1.0",
+    "paginate-array": "^2.1.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
   },
