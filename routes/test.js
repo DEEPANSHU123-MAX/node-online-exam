@@ -15,7 +15,8 @@ const Exam = require("../models/exam");
 
 
 //start test page 
-router.get("/:id/startTest", async (req, res) => {
+router.get("/:id/startTest",  ensureAuthenticated,
+ async (req, res) => {
   const examId = req.params.id
   const exam = await Exam.findById({_id:examId})
   const total_questions =exam.questions.length
@@ -24,10 +25,10 @@ router.get("/:id/startTest", async (req, res) => {
 
 // when user click on start test
 // '/test/:examId' POST
-router.post("/:id", async (req, res) => {
+router.post("/:id", ensureAuthenticated,
+ async (req, res) => {
   //check exam id exist
 
-  // all questions
   
   const user = await User.findById({ _id: req.user.id });
   const result = user.results;
@@ -73,7 +74,8 @@ router.post("/:id", async (req, res) => {
   //else create
 });
 
-router.post("/update/:examId/:questionNo/:selectedOption", async (req, res) => {
+router.post("/update/:examId/:questionNo/:selectedOption", ensureAuthenticated,
+ async (req, res) => {
   //update resultBody
   const examId = req.params.examId;
   const questionNo = req.params.questionNo;
@@ -92,23 +94,13 @@ router.post("/update/:examId/:questionNo/:selectedOption", async (req, res) => {
 
  
 
-  //   let user = await User.findById(req.user.id).select({
-  //     results: { $elemMatch: { examId } },
-  //   });
-  //   console.log(
-  //     user.results[0].answeredQuestions,
-  //     user.results[0].answeredQuestions[1],
-  //     selectedOption
-  //   );
-  //   user.results[0].answeredQuestions[questionNo] = selectedOption;
-  //   user.markModified("results");
-  //   await user.update();
-  // send next Question(if any)
+ 
   res.redirect(`/test/${examId}/${Number(questionNo) + 1}`);
 });
 
 // if we directly click on question no from left side menu
-router.get("/:examId/:questionNo", async (req, res) => {
+router.get("/:examId/:questionNo", ensureAuthenticated,
+ async (req, res) => {
 //if option exist
 //option1
 
@@ -124,7 +116,7 @@ router.get("/:examId/:questionNo", async (req, res) => {
   });
 
   const answeredQuestions = user.results[0].answeredQuestions;
-  console.log(answeredQuestions);
+  // console.log(answeredQuestions);
   // for(let questionNumber in answeredQuestions) {
   //   if(answeredQuestions[questionNumber] !=null){
   //      isAnswerExist=answeredQuestions[questionNumber];
@@ -155,7 +147,8 @@ router.get("/:examId/:questionNo", async (req, res) => {
 
 
 //final submit
-router.put("/:examId/submitTest", async (req, res ) => {
+router.put("/:examId/submitTest", ensureAuthenticated,
+async (req, res ) => {
   // calculate grade , attempted, time
   const examId = req.params.examId;
   let userPrevData = await User.findById(req.user.id).select({
@@ -254,7 +247,8 @@ router.get("/:examId/result/data", ensureAuthenticated, async(req, res) => {
 });
 
 
-router.get("/student_results", async (req, res) => {
+router.get("/student_results",  ensureAuthenticated,
+async (req, res) => {
 
   const exams = await Exam.find({isActive:true})
   const user =  await User.findById({_id: req.user.id})

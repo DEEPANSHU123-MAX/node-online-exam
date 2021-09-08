@@ -1,6 +1,6 @@
 const express = require("express");
 
-const dotenv = require("dotenv").config();
+ require("dotenv").config();
 
 // console.log(dotenv.parsed);
 
@@ -36,7 +36,7 @@ router.get("/register", (req, res) => res.render("register"));
 //   res.render("Exam", { name: req.user.name })
 // );
 
-router.get("/student_profile", ensureAuthenticated, async(req, res) => {
+router.get("/student_profile", ensureAuthenticated, isAdmin , async(req, res) => {
  
   const user = await  User.find({ type: "student" }).sort({ date: -1 })
       res.render("student_data", { users: user });
@@ -61,7 +61,7 @@ router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
 
 
 //admin detail update
-router.patch('/admin/:id',async(req,res)=>{
+router.patch('/admin/:id', ensureAuthenticated ,async(req,res)=>{
   
   await User.findByIdAndUpdate(req.params.id,req.body);
  
@@ -94,44 +94,70 @@ router.get('/admin/:id/edit',async(req,res)=>{
 
 //admin password change
   
-router.post("/admin_profile/password",(req , res)=>{ 
+router.post("/admin_profile/password", ensureAuthenticated ,(req ,res)=>{ 
 
+  
   let session = req.session ;
   
-  const user_email=session.req.user.email
+console.log(req.body)
+  const user_Email=session.req.user.email
+
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+ 
   
 
-  if (user_email){
+  if (user_Email){
       var old_password = req.body.oldpassword ;
       var new_password = req.body.newpassword ;
+      if (!new_password.match(pass)) {
+        console.log("passs")
+        req.flash("error_msg", "enter a strong password atleast 8 digit upper lower and special case in it");
+       
+        res.redirect('back')
+      } else {
+        console.log("passs --------------")
        var confirm_password = req.body.confirmpassword ;
-    User.findOne({"email":user_email},(err,user)=>{
+    User.findOne({"email":user_Email},(err,user)=>{
+      
       if(user!=null){
           var hash =user.password;
-          bcrypt.compare(old_password,hash,(err,res)=>{
+          bcrypt.compare(old_password,hash,(err,response)=>{
 
-            if(res){
+            if(response){
               if(new_password === confirm_password){
+                console.log("qwerrefwwdcdwc")
                 bcrypt.hash(new_password,3,(err,hash)=>{
                   user.password=hash;
                   user.save(function(err,user){
                     if(err) return console.error(err)
 
-                    
+                    req.flash("success_msg", "your password has been changed");
+                    res.redirect("/users/admin_dash")
 
                     console.log(" your password has been changed");
+                   
                   })
                 })
+              }else{
+                req.flash("error_msg", "password mismatch");
+                res.redirect("back")
+
               }
+            }else{
+              req.flash("error_msg", "old password is wrong");
+              res.redirect("back")
             }
           })
       }
     })
-  }
   
-  req.flash("success_msg", "your password is now changed");
-  res.redirect("/users/admin_dash")
+  }
+}
+  
+ 
 });
+
+
 
 
 
@@ -144,7 +170,7 @@ router.post("/forgot-password", (req, res, next) => {
   const { email } = req.body;
   User.findOne({ email: email }).then((user) => {
     if (!user) {
-      res.send("not exist");
+      res.send("User not exist");
       return;
     }
 
@@ -203,9 +229,24 @@ router.get("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
+
 router.post("/reset_password/:id/:token", (req, res, next) => {
   const { id, token } = req.params;
   const { password, password2 } = req.body;
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+  
+  if (password != password2) {
+
+    
+    req.flash("error_msg", "password Mismatch");
+    res.redirect("back")
+
+    }else if(!password.match(pass)){
+      req.flash("error_msg", "Enter a strong password atleast 8 digit upper lower and special case in it");
+      res.redirect("back")
+    }
+    else{
 
   User.findById(id, (err, user) => {
     if (!user) {
@@ -236,7 +277,9 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
       console.log(err);
     }
   });
+}
 });
+
 
 router.post("/register", async(req, res) => {
   try{
@@ -247,7 +290,7 @@ router.post("/register", async(req, res) => {
   let errors = [];
 
   if (!name || !email || !phone_no || !address || !password || !password2) {
-    errors.push({ msg: "Please enter a fields " });
+    errors.push({ msg: "Please enter all fields " });
   }
   
   if (!email.match(regexEmail)) {
@@ -322,7 +365,7 @@ router.post("/register", async(req, res) => {
         newUser.tokens = newUser.tokens.concat({ token });
         
 
-        //hashing a
+        //hashing a0
 
         bcrypt.hash(newUser.password, 10, function (err, hash) {
           if (err) throw err;
@@ -352,7 +395,8 @@ router.post("/login", async (req, res, next) => {
   const {email } = req.body;
   // console.log(email, "==");
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne( (email.includes("@"))?{email:email}:{phone_no:email});
+    
     if (!user) {
       req.flash("error_msg", "User is not register");
       res.redirect("login");
@@ -421,44 +465,63 @@ router.get("/delete_student/:id", function (req, res, next) {
 
 
 
-router.post("/std/:id/edit",(req , res)=>{
+router.post("/std/:id/edit", ensureAuthenticated ,(req , res)=>{
 
   let session = req.session ;
   
 console.log(req.body)
   const user_Email=session.req.user.email
+
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+ 
   
 
   if (user_Email){
       var old_password = req.body.oldpassword ;
       var new_password = req.body.newpassword ;
+      if (!new_password.match(pass)) {
+        console.log("passs")
+        req.flash("error_msg", "enter a strong password atleast 8 digit upper lower and special case in it");
+       
+        res.redirect('back')
+      } else {
+        console.log("passs --------------")
        var confirm_password = req.body.confirmpassword ;
     User.findOne({"email":user_Email},(err,user)=>{
       if(user!=null){
           var hash =user.password;
-          bcrypt.compare(old_password,hash,(err,res)=>{
+          bcrypt.compare(old_password,hash,(err,response)=>{
 
-            if(res){
+            if(response){
               if(new_password === confirm_password){
                 bcrypt.hash(new_password,3,(err,hash)=>{
                   user.password=hash;
                   user.save(function(err,user){
                     if(err) return console.error(err)
 
-                    
+                    req.flash("success_msg", "your password has been changed");
+                    res.redirect("/dashboard")
 
                     console.log(" your password has been changed");
                   })
                 })
+              }else{
+                req.flash("error_msg", "password mismatch");
+                res.redirect("back")
+
               }
+            }else{
+              req.flash("error_msg", "old password is wrong");
+              res.redirect("back")
             }
           })
       }
     })
-  }
   
-  req.flash("success_msg", "your password has been changed");
-  res.redirect("/dashboard")
+  }
+}
+  
+ 
 });
 
 

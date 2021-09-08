@@ -65,7 +65,7 @@ router.get("/exam/edit/:id", ensureAuthenticated, isAdmin, async (req, res) => {
   res.render("exam_edit", { exam, date: newDateFormat });
 });
 
-router.get("/exam/delete/:id", async (req, res) => {
+router.get("/exam/delete/:id",ensureAuthenticated, isAdmin, async (req, res) => {
   Exam.findByIdAndDelete(req.params.id, function (err, docs) {
     if (err) {
       console.log(err);
@@ -90,11 +90,11 @@ router.get("/exam", ensureAuthenticated, isAdmin, async (req, res) => {
     const limit = parseInt(size)
     const pages = parseInt(page)
     const skip =(page-1)*size
-    const exams = await Exam.find({}).limit(limit).skip(skip); 
-    console.log(exams)// this will return an array of all exams
+    const all_exams = await Exam.find({})
+    const exams = await Exam.find({}).limit(limit).skip(skip); // this will return an array of given size  exams
     
     
-  res.render("all_exams", { exams , pages,size});
+  res.render("all_exams", { exams , all_exams, pages,size});
   }catch(err){
     res.status(400).send();
   }
@@ -108,7 +108,7 @@ router.get("/exam", ensureAuthenticated, isAdmin, async (req, res) => {
 
 // });
 
-router.get("/exam/:id/active", async (req, res) => {
+router.get("/exam/:id/active",ensureAuthenticated, isAdmin, async (req, res) => {
   const id = req.params.id;
   const exams = await Exam.findById({ _id: id }); // this will return an array of all exams
   exams.isActive = !exams.isActive;
@@ -194,7 +194,7 @@ router.get("/all_Questions_data", ensureAuthenticated , isAdmin , async (req, re
   }
 });
 
-router.get("/all_Questions_table/:id", async (req, res) => {
+router.get("/all_Questions_table/:id", ensureAuthenticated, isAdmin, async (req, res) => {
   const id = req.params.id;
   const exam = await Exam.findById({ _id: id });
   const exam_dropdown = await Exam.find({});
@@ -217,7 +217,7 @@ router.get("/question",ensureAuthenticated ,  isAdmin, async (req, res) => {
 // edit question
 // route - question/edit/:id patch
 
-router.get("/question/update/:questionid/:examid", async (req, res) => {
+router.get("/question/update/:questionid/:examid", ensureAuthenticated, isAdmin, async (req, res) => {
   try{
     const exams = await Exam.find({});
     const questionid = req.params.questionid;
@@ -234,7 +234,7 @@ router.get("/question/update/:questionid/:examid", async (req, res) => {
  
 });
 
-router.post("/question/update/:questionid/:examid", async (req, res) => {
+router.post("/question/update/:questionid/:examid", ensureAuthenticated, isAdmin, async (req, res) => {
   const exam_id = req.params.examid;
   const question_id = req.params.questionid;
   const { questionName, option1, option2, option3, option4, correctOption } =
@@ -258,7 +258,8 @@ router.post("/question/update/:questionid/:examid", async (req, res) => {
   res.redirect(`/all_Questions_table/${exam_id}`);
 });
 
-router.get("/question/delete/:id/:exam_id", async (req, res) => {
+//delete question
+router.get("/question/delete/:id/:exam_id", ensureAuthenticated, isAdmin, async (req, res) => {
   const id = req.params.id;
   const exam_id = req.params.exam_id;
   // console.log(id)
@@ -271,7 +272,7 @@ router.get("/question/delete/:id/:exam_id", async (req, res) => {
   res.redirect("back");
 });
 
-router.get("/create_question", async (req, res) => {
+router.get("/create_question",ensureAuthenticated, isAdmin, async (req, res) => {
   const exam_name = await Exam.find({});
   res.render("create_question", { exam_name });
 });
@@ -302,7 +303,7 @@ router.post("/add_question/:id", async (req, res) => {
 //---------------------------------------question------------------------------------------
 //---------------------------------------results for admin------------------------------------------
 
-router.get("/results", async (req, res) => {
+router.get("/results",ensureAuthenticated, isAdmin, async (req, res) => {
   
   const users = await User.find({}).sort({ date: -1 });
   // users.forEach(user=>{
@@ -313,6 +314,7 @@ router.get("/results", async (req, res) => {
       
   //   })
   // })
+  
   res.render("admin_result_page", { users });
 });
 //---------------------------------------results for admin------------------------------------------
