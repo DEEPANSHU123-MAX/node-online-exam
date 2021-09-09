@@ -171,6 +171,20 @@ router.get("/reset_password/:id/:token", (req, res, next) => {
 router.post("/reset_password/:id/:token", (req, res, next) => {
   const { id, token } = req.params;
   const { password, password2 } = req.body;
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+  
+  if (password != password2) {
+
+    
+    req.flash("error_msg", "password Mismatch");
+    res.redirect("back")
+
+    }else if(!password.match(pass)){
+      req.flash("error_msg", "Enter a strong password atleast 8 digit upper lower and special case in it");
+      res.redirect("back")
+    }
+    else{
 
   User.findById(id, (err, user) => {
     if (!user) {
@@ -201,6 +215,7 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
       console.log(err);
     }
   });
+}
 });
 
 router.post("/register", async(req, res) => {
