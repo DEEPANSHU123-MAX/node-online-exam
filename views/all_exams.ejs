@@ -1,24 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <link rel="stylesheet"
+          href=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
+    <title>Document</title>
+    
+  </head>
+  <body>
+
+    
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+  </header><br>
+
+
+<h1 class="text-center" style="background-color: rgb(230, 189, 208)">View All Exams</h1>
 
 
 
-<h1>View all Exams</h1>
+<a href='/exam/create'  class="btn btn-primary btn-sm" role="button">Create Exam</a><br><br>
 
 
 
-<a href='/exam/create'>Create Exam</a>
 
 
 <div>
     <input type="text" name="" id="input" onkeyup="searchfun()" placeholder="search name" >
+    
   </div>
   <% if(all_exams.length>size){ %>
     <a class="" href="/exam?page=<%=pages +1%>" >next_page</a>
  <% }  %>
    
         
- <button class=' '>
-  <a href="/users/logout">logout</a>
- </button>
 
 <table id="mytable"  style="border:1px solid black;" class="table">
       
@@ -52,7 +81,7 @@
                             <span class="slider round"></span>
                           </label>
                       <% } %></td>
-                <td><a href='exam/edit/<%= exam.id%>'>Edit</a><a class="btn btn-raised btn-danger" href="/exam/delete/<%= exam.id %>">Delete</a></td>
+                <td><a href='exam/edit/<%= exam.id%>'  class="btn btn-primary btn-sm">Edit</a>  <a class="btn btn-raised btn-danger" href="/exam/delete/<%= exam.id %>">Delete</a></td>
             </td>
            
                

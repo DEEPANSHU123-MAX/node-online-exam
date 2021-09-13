@@ -4,15 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+   
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
     <title>Document</title>
 </head>
 <%- include ("./partials/messages") %>
 <body>
+     
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+  </header><br>
+
+    <h1 class="text-center" style="margin-top:20px;background-color: rgb(212, 247, 196)">View results</h1>
+
+    
     <form action="/test/student_results" method="GET">
     <select name="search" id="mySelect"   style="width:200px"  >
         <option  value="">All result</option>
         <% var options = []; %> <% exams.forEach(function (exam , index){%>
-            
 
         <option id="<%=exam.id%>" value="<%= exam.name %>" <%=(search_exam.name == exam.name)&&"selected"%> >
           <%= exam.name %>
@@ -21,11 +41,11 @@
         <% } )%>
       </select>
       <button class="search-btn" type="submit">Search</button>
-    </form>
+    </form><br>
    
     <table  style="border:1px solid black;" class="table">
       
-        <h2>View results</h2>
+        
        
         <tr >
             <th>State</th>

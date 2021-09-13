@@ -25,7 +25,7 @@ router.get("/:id/startTest",  ensureAuthenticated,
 
 // when user click on start test
 // '/test/:examId' POST
-router.post("/:id", ensureAuthenticated,
+router.post("/:id/:questionno", ensureAuthenticated,
  async (req, res) => {
   //check exam id exist
 
@@ -66,6 +66,7 @@ router.post("/:id", ensureAuthenticated,
       isAnswerExist:null,
     });
   } else{
+    console.log("--------")
     
   req.flash("error_msg", "Already Attempted");
   res.redirect("back")
@@ -106,6 +107,7 @@ router.get("/:examId/:questionNo", ensureAuthenticated,
 
  
   const questionNo = req.params.questionNo;
+  console.log(questionNo)
   const examId = req.params.examId;
   const exam = await Exam.findById(examId);
   const allQuestions = exam.questions;
@@ -127,6 +129,7 @@ router.get("/:examId/:questionNo", ensureAuthenticated,
   
   
   if(allQuestions.length>= questionNo){
+    
     res.render("test_questions", {
         answeredQuestions,
         examId: examId,
@@ -136,6 +139,7 @@ router.get("/:examId/:questionNo", ensureAuthenticated,
        
       });
   }else{
+    console.log("finish exam")
     req.flash("success_msg", "Click the finish exam button to submit");
     res.redirect("back");
   }

@@ -1,9 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
+    <title>Document</title>
+    
+  </head>
+  <%- include ("./partials/messages") %>
+  <body>
+    <header>
+      <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+        <span class="glyphicon glyphicon-log-out"></span>logout</a>
+  
+    </header><br>
+  
+ 
+  <h1 class="text-center" style="margin-top:20px;background-color: rgb(212, 247, 196)">Student Dashboard</h1>
 
-<%- include ("./partials/messages") %>
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= name %></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
-<a href="/users/std/<%= id %>/edit" class="btn btn-secondary">Edit</a>
 
-<a href="/users/active_exams" class="btn btn-secondary">Exams</a>
-<a href="/test/student_results" class="btn btn-secondary">results</a>
+   <div class="  text-center">
+<a href="/users/std/<%= id %>/edit" class="btn btn-primary btn-lg  " style= "margin-top:70px;margin-left:35px ;width: 300px;padding:20px" >My Profile</a><br>
+<a href="/users/active_exams" class="btn btn-primary btn-lg  " style= "margin-top:70px;;margin-left:35px;width:300px;padding:20px" >Test</a><br>
+<a href="/test/student_results" class="btn btn-primary btn-lg  " style= "margin-top:70px;margin-left:35px;width: 300px;padding:20px" >Result</a>
+</div>
+
+</body>
+</html>

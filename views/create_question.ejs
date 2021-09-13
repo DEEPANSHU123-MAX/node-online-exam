@@ -4,14 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+ 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
     <title>Document</title>
-</head>
+    
 <%- include ("./partials/messages") %>
 <body>
+  
+  <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top:20px;">
+    <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+<br>
+
+
+  <h1 class="text-center" style="background-color: rgb(230, 189, 208);margin-top: 30px;">Create New Question</h1>
      
     
-        <select name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px"  >
-          <option  value="">Select exam</option>
+        <select  name="search" id="mySelect" onclick="updateid(this.id)"  style="width:200px" >
+          <option  value="" >Select exam</option>
           <% var options = []; %> <% exam_name.forEach(function (exam , index){%>
               
   
@@ -24,33 +43,38 @@
   
         <div class="imae"></div>
      
-    <h1>Create question</h1>
+    
     <form action="/add_question" id ="form_id" method="POST">
         <h3>#questions</h3>
         <textarea id="questionName" name="questionName" rows="4" cols="50"></textarea>
         <h3>select option</h3>
         <label for="option1">option1</label>
-        <input type="text" id="option1" name="option1" ><br>
+        <input type="text" id="option1" name="option1" ><br><br>
         <label for="option2">option2</label> 
-        <input type="text" id="option2" name="option2" ><br>
+        <input type="text" id="option2" name="option2" ><br><br>
         <label for="option3">option3</label>
-        <input type="text" id="option3" name="option3" ><br>
+        <input type="text" id="option3" name="option3" ><br><br>
         <label for="option4">option4</label>
-        <input type="text" id="option4" name="option4" ><br>
+        <input type="text" id="option4" name="option4" ><br><br>
         
-        <h4>correct option</h4> <select name="correctOption"  id="correctOption">
+        <h4>correct option</h4> 
+        <select name="correctOption"  id="correctOption">
             <option value="option1">option1</option>
             <option value="option2">option2</option>
             <option value="option3">option3</option>
             <option value="option4">option4</option>
             
-          </select>
-        <input type="submit" class="btn btn-success"  value="Submit">
+          </select><br><br>
+         
+        <input type="submit" class="btn btn-success"  value="Submit" style= "margin-left: 400px;margin-bottom:20px;" >
+        <a class="btn btn-info pull-right"  id="cancel" href="/all_Questions_data" style="margin-left: 100px ;margin-bottom:20px;"
+      >cancel</a>
+      </div>
+      
     
     </form>
-    <a class="btn btn-info" id="cancel" href="/all_Questions_data"
-            >cancel</a
-          >
+   
+          
           <script type="">
     
 

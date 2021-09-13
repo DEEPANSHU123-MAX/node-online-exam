@@ -28,7 +28,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const { getMaxListeners } = require("../models/user");
 
-router.get("/login", (req, res) => res.render("login"));
+router.get("/login", (req, res) => res.render("welcome"));
 
 router.get("/register", (req, res) => res.render("register"));
 
@@ -36,7 +36,7 @@ router.get("/register", (req, res) => res.render("register"));
 //   res.render("Exam", { name: req.user.name })
 // );
 
-router.get("/student_profile", ensureAuthenticated, async(req, res) => {
+router.get("/student_profile", ensureAuthenticated, isAdmin , async(req, res) => {
  
   const user = await  User.find({ type: "student" }).sort({ date: -1 })
       res.render("student_data", { users: user });
@@ -45,58 +45,119 @@ router.get("/student_profile", ensureAuthenticated, async(req, res) => {
 });
 
 router.get("/admin_dash", ensureAuthenticated, isAdmin, (req, res) =>
-  res.render("admin_dash", { name: req.user.name })
+  res.render("admin_dash", { name: req.user.name , id:req.user.id})
 );
 
 // Admin  Profile
-router.get("/admin_profile",ensureAuthenticated , isAdmin, (req,res)=>{
-  res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address})
+ router.get("/admin_profile",(req,res)=>{
+  res.render("admin_profile",{name:req.user.name, email:req.user.email, phone_no:req.user.phone_no, address:req.user.address , id:req.user.id})
+ });
+
+
+
+
+  
+
+
+
+//admin detail update
+router.patch('/admin/:id', ensureAuthenticated ,async(req,res)=>{
+  
+  await User.findByIdAndUpdate(req.params.id,req.body);
+ 
+ 
+  try
+  {
+      res.redirect("/users/admin_dash")
+  }catch(e)
+  {
+  console.log("Something Went Problem");
+   }
 });
+//show data on admin profile form 
+router.get('/admin/:id/edit',async(req,res)=>{
+ 
+  try{
+   
+      const user = await User.findById(req.params.id)
+      res.render('admin_profile',{user})
+      console.log(user)
+     
+  }
+  catch(e){
+      console.log(e.message)
+          res.render() 
+  }
+  
+  });
+
 
 //admin password change
   
-router.post("/admin_profile/password",(req , res)=>{
+router.post("/admin_profile/password", ensureAuthenticated ,(req ,res)=>{ 
 
   
-  
-
   let session = req.session ;
-  console.log(req.body)
+  
+console.log(req.body)
+  const user_Email=session.req.user.email
 
-  const user_email=session.req.user.email
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+ 
   
 
-  if (user_email){
+  if (user_Email){
       var old_password = req.body.oldpassword ;
       var new_password = req.body.newpassword ;
+      if (!new_password.match(pass)) {
+        console.log("passs")
+        req.flash("error_msg", "enter a strong password atleast 8 digit upper lower and special case in it");
+       
+        res.redirect('back')
+      } else {
+        console.log("passs --------------")
        var confirm_password = req.body.confirmpassword ;
-    User.findOne({"email":user_email},(err,user)=>{
+    User.findOne({"email":user_Email},(err,user)=>{
+      
       if(user!=null){
           var hash =user.password;
-          bcrypt.compare(old_password,hash,(err,res)=>{
+          bcrypt.compare(old_password,hash,(err,response)=>{
 
-            if(res){
+            if(response){
               if(new_password === confirm_password){
+                console.log("qwerrefwwdcdwc")
                 bcrypt.hash(new_password,3,(err,hash)=>{
                   user.password=hash;
                   user.save(function(err,user){
                     if(err) return console.error(err)
 
-                    
+                    req.flash("success_msg", "your password has been changed");
+                    res.redirect("/users/admin_dash")
 
                     console.log(" your password has been changed");
+                   
                   })
                 })
+              }else{
+                req.flash("error_msg", "password mismatch");
+                res.redirect("back")
+
               }
+            }else{
+              req.flash("error_msg", "old password is wrong");
+              res.redirect("back")
             }
           })
       }
     })
-  }
   
-  req.flash("success_msg", "your password is now changed");
-  res.redirect("admin_dash")
+  }
+}
+  
+ 
 });
+
+
 
 
 
@@ -168,6 +229,7 @@ router.get("/reset_password/:id/:token", (req, res, next) => {
   });
 });
 
+
 router.post("/reset_password/:id/:token", (req, res, next) => {
   const { id, token } = req.params;
   const { password, password2 } = req.body;
@@ -218,6 +280,7 @@ router.post("/reset_password/:id/:token", (req, res, next) => {
 }
 });
 
+
 router.post("/register", async(req, res) => {
   try{
   var phoneno = /^\d{10}$/;
@@ -248,7 +311,7 @@ router.post("/register", async(req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render("register", {
+    res.render("welcome", {
       errors,
       name,
       email,
@@ -261,7 +324,7 @@ router.post("/register", async(req, res) => {
     const user = await User.findOne({ email: email  }) 
       if (user) {
         errors.push({ msg: "Email already exists" });
-        res.render("register", {
+        res.render("welcome", {
           errors,
           name,
           email,
@@ -277,7 +340,7 @@ router.post("/register", async(req, res) => {
         const user = await User.findOne({ phone_no: phone_no  }) 
         if (user) {
           errors.push({ msg: "phone no already exists" });
-          res.render("register", {
+          res.render("welcome", {
             errors,
             name,
             email,
@@ -302,7 +365,7 @@ router.post("/register", async(req, res) => {
         newUser.tokens = newUser.tokens.concat({ token });
         
 
-        //hashing a
+        //hashing a0
 
         bcrypt.hash(newUser.password, 10, function (err, hash) {
           if (err) throw err;
@@ -329,7 +392,7 @@ router.post("/register", async(req, res) => {
 // Login
 router.post("/login", async (req, res, next) => {
   let redirect = "/dashboard";
-  const { email } = req.body;
+  const {email } = req.body;
   // console.log(email, "==");
   try {
     const user = await User.findOne( (email.includes("@"))?{email:email}:{phone_no:email});
@@ -357,12 +420,14 @@ router.get("/logout", (req, res) => {
   req.flash("success_msg", "You are logged out");
   res.redirect("/users/login");
 });
+
 //student detail update
 router.patch('/std/:id',async(req,res)=>{
   
-  await User.findByIdAndUpdate(req.params.id, req.body);
+ 
   try
   {
+    await User.findByIdAndUpdate(req.params.id, req.body);
       res.redirect("/dashboard")
   }catch(e)
   {
@@ -395,6 +460,78 @@ router.get("/delete_student/:id", function (req, res, next) {
 });
 
 
+
+// Change student password
+
+
+
+router.post("/student_password", ensureAuthenticated ,(req , res)=>{
+
+  let session = req.session ;
+  
+console.log(req.body)
+  const user_Email=session.req.user.email
+
+  var pass = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+ 
+  
+
+  if (user_Email){
+      var old_password = req.body.oldpassword ;
+      var new_password = req.body.newpassword ;
+      if (!new_password.match(pass)) {
+        console.log("passs")
+        req.flash("error_msg", "enter a strong password atleast 8 digit upper lower and special case in it");
+       
+        res.redirect('back')
+      } else {
+        console.log("passs --------------")
+       var confirm_password = req.body.confirmpassword ;
+    User.findOne({"email":user_Email},(err,user)=>{
+      if(user!=null){
+          var hash =user.password;
+          bcrypt.compare(old_password,hash,(err,response)=>{
+
+            if(response){
+              if(new_password === confirm_password){
+                bcrypt.hash(new_password,3,(err,hash)=>{
+                  user.password=hash;
+                  user.save(function(err,user){
+                    if(err) return console.error(err)
+
+                    req.flash("success_msg", "your password has been changed");
+                    res.redirect("/dashboard")
+
+                    console.log(" your password has been changed");
+                  })
+                })
+              }else{
+                req.flash("error_msg", "password mismatch");
+                res.redirect("back")
+
+              }
+            }else{
+              req.flash("error_msg", "old password is wrong");
+              res.redirect("back")
+            }
+          })
+      }
+    })
+  
+  }
+}
+  
+ 
+});
+
+
+
+
+
+
+
+
+
 router.get('/active_exams', ensureAuthenticated , isLoggedIn ,async(req,res)=>{
   try{
    
@@ -408,4 +545,4 @@ router.get('/active_exams', ensureAuthenticated , isLoggedIn ,async(req,res)=>{
   }
 })
 
-module.exports = router;
+module.exports = router ;

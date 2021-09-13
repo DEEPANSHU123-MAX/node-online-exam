@@ -4,19 +4,46 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <link rel="stylesheet"
+          href=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
     <title>Document</title>
+    
   </head>
 
-  <h1>View all registered student</h1> 
-  <button class=''>
-    <a href="/users/logout">logout</a>
-      </button>
+  <body>
+
+    
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+  </header><br>
+
+  <h1 class="text-center"  style="background-color: rgb(230, 189, 208)">View All Registered Student</h1> 
+ 
+   
      
+
   
-  <body> <div>
-    <input type="text" name="" id="myinput" onkeyup="searchfun()" placeholder="search name" >
+   <div>
+    <input type="text" name="" id="myinput" onkeyup="searchbyname()" placeholder="search by name" >
+  </div><br>
+  
+  
+  <div>
+    <input type="text" name="" id="mydate" onkeyup="searchbydate()" placeholder="search by date" >
   </div>
-  
+  <br>
   
     <table id="mytable"  style="border:1px solid black;" class="table">
       
@@ -51,7 +78,7 @@
     </table>
     
    <script>
-     const searchfun =()=>{
+     const searchbyname =()=>{
        let filter = document.getElementById("myinput").value.toUpperCase()
 
        let myTable = document.getElementById("mytable")
@@ -59,6 +86,27 @@
 
        for(var i =0 ; i<tr.length;i++){
          let td =tr[i].getElementsByTagName("td")[1]
+         if(td){
+           let textvalue = td.textContent||td.innerHTML
+
+           if(textvalue.toUpperCase().indexOf(filter) > -1){
+             tr[i].style.display =""
+           }else{
+             tr[i].style.display = "none"
+           }
+         }
+       }
+     }
+
+
+     const searchbydate =()=>{
+       let filter = document.getElementById("mydate").value.toUpperCase()
+
+       let myTable = document.getElementById("mytable")
+       let tr =myTable.getElementsByTagName("tr")
+
+       for(var i =0 ; i<tr.length;i++){
+         let td =tr[i].getElementsByTagName("td")[4]
          if(td){
            let textvalue = td.textContent||td.innerHTML
 

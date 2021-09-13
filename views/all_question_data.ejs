@@ -7,12 +7,34 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
     <title>Document</title>
   
   </head>
   <%- include ("./partials/messages") %>
   
   <body>
+
+    
+  <header>
+    <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+      <span class="glyphicon glyphicon-log-out"></span>logout</a><br>
+
+  </header><br>
+    <h1 class="text-center" style="background-color: rgb(236, 111, 117)"> View All Questions</h1>
+
+    
+
+      
     <% if(questions.length>=size&& size!=""){ %>
       <a class="" href="/all_Questions_data?page=<%=pages +1%>" >next_page</a>
    <% }  %>
@@ -37,15 +59,13 @@
       <div class="imae"></div>
     </form>
 
-    <a id="" href="/create_question"
-      >Add new question</a >
+    <a id="" href="/create_question" class="btn btn-primary btn-sm" role="button" >Add new question</a >
 
-    <h1> view All Questions</h1>
     <h3><%=selected_exam%></h3>
     
-    <table style="border: 1px solid black" class="table">
+    <table style="border: 2px solid black" class="table">
       <thead class="thead-dark">
-        <tr>
+        <tr  style="border: 2px solid black">
           <th>Sr.no</th>
           <th>Questions</th>
           <th>options</th>

@@ -5,36 +5,44 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+.grade{
+    margin-top:100px;
+    background: rgb(135, 247, 172);
+    padding:10px ;
+    text-align: center;
+    
+}
+    .def{
+        
+        background-color: rgb(206, 206, 206);
+        padding: 10px;
+
+    }
+
+
+
+    </style>
 </head>
 <body>
-    <h2>Test Review</h2>
-    <table  style="border:1px solid black;" class="table">
-      
-        <tr >
-            <th>Grades</th>
-            <th>Total Questions</th>
-            <th>Attempted</th>
-            <th>Unattempted</th>
-           
-            
-        </tr>
-       
-    <tbody>
-     
-       
-            <tr>
-                <td><h4>Total Grades</h4><%= grade%>/<%= totalQuestions%></td>
-                <td><h4>Total questions</h4><%= totalQuestions%></td>
-                <td><h4>Total Attempted</h4><%= attempted%></td>
-                <td><h4>Total UnAttempted</h4><%= unAttempted%></td>
-             
-           
-               
-            </tr>
-      
 
-       
-    </tbody>
-</table>
+    <header>
+        <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+          <span class="glyphicon glyphicon-log-out"></span>logout</a>
+  
+      </header><br><br>
+      
+    <h1  class="text-center"  style="background-color: rgb(230, 189, 208)">Test Review</h1>
+    
+    
+    
+    
+    <h3 class="grade" >Grades &ensp; <%= grade%>/<%= totalQuestions%></h3>
+    
+    <h5 class="def">Total Number Of Questions &emsp; &emsp; &emsp; &ensp;&nbsp;: &emsp;<%= totalQuestions%>  </h5>
+    <h5 class="def"> Number Of Answered Questions &emsp; &ensp; &nbsp;: &emsp;<%= attempted%>  </h5>
+    <h5 class="def"> Number Of Unanswered Questions &emsp;: &emsp;<%= unAttempted%> </h5>
+    
+   
 </body>
 </html>

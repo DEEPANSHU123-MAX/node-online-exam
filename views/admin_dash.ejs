@@ -4,28 +4,59 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+    
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+  </script>
+
     <title>Document</title>
+    <style>
+    .btn{
+       background-color: #df9898;
+
+  display: inline-block;
+  font-size: 30px;
+  width: 300px;
+  margin-top: 70px ;
+  margin-left: 170px ;
+  cursor: pointer;
+  padding: 20px;
+}
+
+    </style>
   </head>
   <%- include ("./partials/messages") %>
-  <body>
-    <h1>welcome admin <%=name %></h1>
+  <body>  
+    <header>
+      <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top: 10px;">
+        <span class="glyphicon glyphicon-log-out"></span>logout</a>
 
-    <a href="/users/admin_profile" class="btn"> <i class="fa fa-home"></i> My Profile</a>
-
-    <p class="lead mt-4"><a href="/users/student_profile"><i style='font-size:67px' class='fas'>&#xf501;</i></a></p>
+    </header><br>
    
-
-    <p class="lead mt-4"><a href="/exam"><i style='font-size:67px' class='fas'>&#9997;</i></a></p>
-
-    <p class="lead mt-4"><a href="/all_Questions_data">Questions</a></p>
-
-    <p class="lead mt-4"><a href="/results">Results</a></p>
+    <h1 class="text-center" style="background-color: rgb(111, 105, 194);margin-top: 30px;padding: 10px;">Admin Dashboard </h1>
+   
     
+      
 
-    <button class='btn btn-success pull-right'>
-      <a href="/users/logout">logout</a>
-        </button>
+     <div class="fr-buttons">
+      <a href="/users/admin/<%=id %>/edit" class="btn"> <i class="fa fa-home"></i> My Profile</a>
   
-    
+
+      <a href="/users/student_profile" class="btn"><i  class='fas'>&#xf501;</i> Students</a>
+     
+     </div>
+     <div class=" sr-buttons">
+     <a href="/exam" class="btn"><i class='fas fa-paste' style='font-size:36px'></i> Exams</a>
+
+    <a href="/all_Questions_data" class="btn"><i class="fa fa-question-circle" style='font-size:36px' aria-hidden="true"></i> Questions</a>
+  </div>
+  <div style="margin-left:250px ;"><a href="/results" class ="btn"><i class='fas fa-file' style='font-size:36px'></i> Results</a></div>
+
   </body>
 </html>

@@ -206,6 +206,7 @@ router.get("/all_Questions_table/:id", ensureAuthenticated, isAdmin, async (req,
     exam_id: exam.id,
     selected_exam: exam.name,
     pages,
+    size:"",
   });
 });
 
@@ -305,7 +306,7 @@ router.post("/add_question/:id", async (req, res) => {
 
 router.get("/results",ensureAuthenticated, isAdmin, async (req, res) => {
   
-  const users = await User.find({}).sort({ date: -1 });
+  const users = await User.find({type:"student"}).sort({ date: -1 });
   // users.forEach(user=>{
   //   let username = user.name
   //   let userEmail = user.userEmail

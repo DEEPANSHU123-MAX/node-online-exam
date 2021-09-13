@@ -36,6 +36,7 @@ app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 
+
 // Passport Config
 require("./config/passport")(passport);
 
@@ -54,6 +55,7 @@ app.use(
 );
 
 // Passport middleware
+app.use(methodOverride('_method'));
 app.use(passport.initialize());
 app.use(passport.session());
 

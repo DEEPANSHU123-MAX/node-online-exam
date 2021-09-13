@@ -5,13 +5,45 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+ 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+
+<script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
+</script>
+  
   <title>Document</title>
 </head>
 <body>
+  
+  <a href="/users/logout" class='btnn btn-secondary btn-sm pull-right' role="button" style="float:right;margin-top:20px;">
+    <span class="glyphicon glyphicon-log-out"></span>logout</a>
+
+<br>
+  <h1  class=" text-center " style="margin-top: 40px;gap: 10px;background-color: rgb(248, 167, 241);"> Edit Exam</h1>
   <form action="/exam/edit/<%=exam.id%>" method="POST">
+    <div class=" form-group text-center">
+     <div class=" mt-8 input-group input-lg" style="margin-left:470px;margin-top: 80px;">
+
     <input type="text" name="name" value="<%=exam.name %>" />
+    </div>
+    </div>
+    
+    <div class=" form-group text-center">
+      <div class="mt-5 input-group input-lg" style="margin-left: 470px;">
     <input type="date" name="date" value="<%=date %>" />
-    <button type="submit">Update</button>
+    </div>
+    </div>
+    
+    <div class="text-center" >  
+    <button type="submit" style="margin-top: 60px;">Update</button>
+    </div>
   </form>
 </body>
 </html>
